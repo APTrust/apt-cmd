@@ -1,7 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
@@ -13,13 +9,22 @@ import (
 // getCmd represents the get command
 var getCmd = &cobra.Command{
 	Use:   "get",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Get a record from the APTrust Registry",
+	Long: `Retrieve a single record from the APTrust Registry.
+Records are in json format. Object and file identifiers are strings,
+such as 'example.edu/photos' (object identifier) or
+'example.edu/photos/data/image1.jpg' (file identifier). Ids are numeric.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Examples to retrieve individual records:
+
+aptrust get object <object_identifier>
+aptrust get object <object_id>
+
+aptrust get file <file_identifier>
+aptrust get file <file_id>
+
+aptrust get workitem <item_id>
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("get called")
 	},
