@@ -1,5 +1,11 @@
 package cmd
 
+import (
+	"errors"
+	"net/url"
+	"strings"
+)
+
 const (
 	// EXIT_OK means program completed successfully.
 	EXIT_OK = 0
@@ -21,3 +27,31 @@ const (
 	// operations were performed.
 	EXIT_NO_OP = 100
 )
+
+var ErrImbalancedArgPair = errors.New("odd number of filter args")
+
+type ArgPair struct {
+	Name  string
+	Value string
+}
+
+func ParseArgPairs(args []string) []ArgPair {
+	pairs := make([]ArgPair, 0)
+	for _, arg := range args {
+		if !strings.Contains(arg, "=") {
+			continue
+		}
+		parts := strings.SplitN(arg, "=", 2)
+		pairs = append(pairs, ArgPair{Name: parts[0], Value: parts[1]})
+	}
+	return pairs
+}
+
+func GetUrlValues(args []string) url.Values {
+	pairs := ParseArgPairs(args)
+	v := url.Values{}
+	for _, pair := range pairs {
+		v.Add(pair.Name, pair.Value)
+	}
+	return v
+}

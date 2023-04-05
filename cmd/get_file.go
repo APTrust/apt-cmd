@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -24,6 +21,9 @@ aptrust get file <file_id>
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("get file called")
+		fmt.Println(args)
+		fmt.Println(ParseArgPairs(args))
+		fmt.Println(GetUrlValues(args))
 	},
 }
 
