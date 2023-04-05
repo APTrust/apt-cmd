@@ -1,0 +1,23 @@
+# APTrust config file for aptrust command-line utilities.
+
+# Settings for the demo environment at demo.aptrust.org
+DEMO_REGISTRY_EMAIL=''
+DEMO_REGISTRY_API_KEY=''
+
+# Settings for accessing demo AWS buckets
+DEMO_AWS_KEY=''
+DEMO_AWS_SECRET=''
+DEMO_RECEIVING_BUCKET=''
+DEMO_RESTORATION_BUCKET=''
+
+# Settings for the production environment at repo.aptrust.org
+PROD_REGISTRY_EMAIL=''
+PROD_REGISTRY_API_KEY=''
+PROD_AWS_KEY=''
+PROD_AWS_SECRET=''
+PROD_RECEIVING_BUCKET=''
+PROD_RESTORATION_BUCKET=''
+
+# When downloading files from your APTrust restoration buckets,
+# which directory do you want to put them in?
+DOWNLOAD_DIR=''
