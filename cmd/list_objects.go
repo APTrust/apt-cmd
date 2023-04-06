@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -15,7 +16,12 @@ var objectsCmd = &cobra.Command{
 	Short: "List object records from the APTrust Registry.",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list objects called")
+		client, urlValues := InitRegistryRequest(args)
+		EnsureDefaultListParams(urlValues)
+		resp := client.IntellectualObjectList(urlValues)
+		data, _ := resp.RawResponseData()
+		fmt.Println(string(data))
+		os.Exit(EXIT_OK)
 	},
 }
 

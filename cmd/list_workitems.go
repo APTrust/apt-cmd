@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -12,7 +13,12 @@ var workitemsCmd = &cobra.Command{
 	Short: "List work item records from the APTrust registry.",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("workitems called")
+		client, urlValues := InitRegistryRequest(args)
+		EnsureDefaultListParams(urlValues)
+		resp := client.WorkItemList(urlValues)
+		data, _ := resp.RawResponseData()
+		fmt.Println(string(data))
+		os.Exit(EXIT_OK)
 	},
 }
 
