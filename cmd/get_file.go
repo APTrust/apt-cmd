@@ -23,12 +23,7 @@ aptrust get file <file_identifier>
 aptrust get file <file_id>
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		urlValues := GetUrlValues(args)
-		client, err := NewRegistryClient(config)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error getting Registry client:", err)
-			os.Exit(EXIT_RUNTIME_ERR)
-		}
+		client, urlValues := InitRegistryRequest(args)
 		var resp *network.RegistryResponse
 		fileID, _ := strconv.ParseInt(urlValues.Get("id"), 10, 64)
 		if fileID > 0 {
@@ -36,15 +31,7 @@ aptrust get file <file_id>
 		} else {
 			resp = client.GenericFileByIdentifier(urlValues.Get("identifier"))
 		}
-		//if resp.Error != nil {
-		//	fmt.Fprintln(os.Stderr, "Error getting file from Registry:", resp.Error)
-		//	os.Exit(EXIT_RUNTIME_ERR)
-		//}
 		data, _ := resp.RawResponseData()
-		//if err != nil {
-		//	fmt.Fprintln(os.Stderr, "Error reading response data:", err)
-		//	os.Exit(EXIT_RUNTIME_ERR)
-		//}
 		fmt.Println(string(data))
 		os.Exit(EXIT_OK)
 	},
@@ -52,13 +39,6 @@ aptrust get file <file_id>
 
 func init() {
 	getCmd.AddCommand(fileCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// fileCmd.PersistentFlags().String("foo", "", "A help for foo")
-
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// fileCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

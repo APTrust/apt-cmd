@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/APTrust/preservation-services/network"
@@ -11,19 +13,27 @@ import (
 const (
 	// EXIT_OK means program completed successfully.
 	EXIT_OK = 0
+
 	// EXIT_RUNTIME_ERR means program did not complete
 	// successfully due to an error. The error may have
 	// occurred outside the program, such as a network
 	// error or an error on a remote server.
 	EXIT_RUNTIME_ERR = 1
+
 	// EXIT_BAG_INVALID is used primarily for apt_validate.
 	// It means the program completed its run and found that
 	// the bag is not valid.
 	EXIT_BAG_INVALID = 2
+
 	// EXIT_USER_ERR means the user did not supply some
 	// required option or argument, or the user supplied
 	// invalid options/arguments.
 	EXIT_USER_ERR = 3
+
+	// EXIT_REQUEST_ERROR means the remote server responded
+	// with a 4xx or 5xx HTTP status code.
+	EXIT_REQUEST_ERROR = 4
+
 	// EXIT_NO_OP means the user requested help message or
 	// version info. The program printed the info, and no other
 	// operations were performed.
@@ -74,4 +84,16 @@ func NewRegistryClient(config *Config) (*network.RegistryClient, error) {
 		client.UseMemberAPI()
 	}
 	return client, err
+}
+
+func InitRegistryRequest(args []string) (*network.RegistryClient, url.Values) {
+	urlValues := GetUrlValues(args)
+	client, err := NewRegistryClient(config)
+	if err != nil {
+		// Only error here is that user didn't supply valid
+		// Registry config or Registry crendentials
+		fmt.Fprintln(os.Stderr, "Error getting Registry client:", err)
+		os.Exit(EXIT_USER_ERR)
+	}
+	return client, urlValues
 }
