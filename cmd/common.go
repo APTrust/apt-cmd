@@ -4,6 +4,8 @@ import (
 	"errors"
 	"net/url"
 	"strings"
+
+	"github.com/APTrust/preservation-services/network"
 )
 
 const (
@@ -54,4 +56,22 @@ func GetUrlValues(args []string) url.Values {
 		v.Add(pair.Name, pair.Value)
 	}
 	return v
+}
+
+func NewRegistryClient(config *Config) (*network.RegistryClient, error) {
+	err := config.ValidateRegistryConfig()
+	if err != nil {
+		return nil, err
+	}
+	client, err := network.NewRegistryClient(
+		config.RegistryURL,
+		config.RegistryAPIVersion,
+		config.RegistryEmail,
+		config.RegistryAPIKey,
+		logger,
+	)
+	if client != nil {
+		client.UseMemberAPI()
+	}
+	return client, err
 }

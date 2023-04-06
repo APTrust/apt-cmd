@@ -2,7 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 
+	"github.com/APTrust/preservation-services/network"
 	"github.com/spf13/cobra"
 )
 
@@ -20,10 +23,30 @@ aptrust get file <file_identifier>
 aptrust get file <file_id>
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("get file called")
-		fmt.Println(args)
-		fmt.Println(ParseArgPairs(args))
-		fmt.Println(GetUrlValues(args))
+		urlValues := GetUrlValues(args)
+		client, err := NewRegistryClient(config)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error getting Registry client:", err)
+			os.Exit(EXIT_RUNTIME_ERR)
+		}
+		var resp *network.RegistryResponse
+		fileID, _ := strconv.ParseInt(urlValues.Get("id"), 10, 64)
+		if fileID > 0 {
+			resp = client.GenericFileByID(fileID)
+		} else {
+			resp = client.GenericFileByIdentifier(urlValues.Get("identifier"))
+		}
+		//if resp.Error != nil {
+		//	fmt.Fprintln(os.Stderr, "Error getting file from Registry:", resp.Error)
+		//	os.Exit(EXIT_RUNTIME_ERR)
+		//}
+		data, _ := resp.RawResponseData()
+		//if err != nil {
+		//	fmt.Fprintln(os.Stderr, "Error reading response data:", err)
+		//	os.Exit(EXIT_RUNTIME_ERR)
+		//}
+		fmt.Println(string(data))
+		os.Exit(EXIT_OK)
 	},
 }
 
