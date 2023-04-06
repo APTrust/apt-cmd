@@ -1,10 +1,8 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -15,7 +13,12 @@ var filesCmd = &cobra.Command{
 	Short: "List files from the APTrust Registry",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list files called")
+		client, urlValues := InitRegistryRequest(args)
+		EnsureDefaultListParams(urlValues)
+		resp := client.GenericFileList(urlValues)
+		data, _ := resp.RawResponseData()
+		fmt.Println(string(data))
+		os.Exit(EXIT_OK)
 	},
 }
 

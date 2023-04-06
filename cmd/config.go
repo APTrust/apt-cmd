@@ -50,3 +50,39 @@ func (config *Config) ValidateAWSCredentials() error {
 	}
 	return nil
 }
+
+func (config *Config) String() string {
+	regAPIKey := "[redacted]"
+	if config.RegistryAPIKey == "" {
+		regAPIKey = "MISSING!"
+	}
+	awsKey := "MISSING!"
+	if len(config.AWSKey) > 3 {
+		awsKey = fmt.Sprintf("**********%s", config.AWSKey[len(config.AWSKey)-3:])
+	}
+	awsSecret := "[redacted]"
+	if config.AWSSecret == "" {
+		awsSecret = "MISSING!"
+	}
+	return fmt.Sprintf(`Configuration:
+	RegistryURL:             %s
+	RegistryAPIVersion:      %s
+	RegistryEmail:           %s
+	RegistryAPIKey:          %s
+	AWSKey:                  %s
+	AWSSecret:               %s
+	ReceivingBucket:         %s
+	RestorationBucket:       %s
+	DownloadDir:             %s
+	ConfigSource:            %s`,
+		config.RegistryURL,
+		config.RegistryAPIVersion,
+		config.RegistryEmail,
+		regAPIKey,
+		awsKey,
+		awsSecret,
+		config.ReceivingBucket,
+		config.RestorationBucket,
+		config.DownloadDir,
+		config.ConfigSource)
+}

@@ -97,3 +97,12 @@ func InitRegistryRequest(args []string) (*network.RegistryClient, url.Values) {
 	}
 	return client, urlValues
 }
+
+func EnsureDefaultListParams(values url.Values) {
+	if values.Get("sort") == "" {
+		values.Set("sort", "id")
+	}
+	if values.Get("per_page") == "" {
+		values.Set("per_page", "25")
+	}
+}

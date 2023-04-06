@@ -20,6 +20,7 @@ var rootCmd = &cobra.Command{
 }
 
 var config *Config
+var debug bool
 var cfgFile string
 var logger *logging.Logger
 
@@ -32,12 +33,13 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	initLogger()
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.aptrust)")
+	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "print debug output to stderr")
 }
 
 func initConfig() {
+	initLogger()
 	useConfigFile := false
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
@@ -77,13 +79,17 @@ func initConfig() {
 		DownloadDir:        viper.GetString("APTRUST_DOWNLOAD_DIR"),
 		ConfigSource:       configSource,
 	}
+	logger.Debug(config.String())
 }
 
 func initLogger() {
-	// We do this because the registry client requires
-	// a logger, but we don't really want to log its output.
+	outStream := io.Discard
+	if debug {
+		outStream = os.Stderr
+		fmt.Println("DEBUG = ", debug)
+	}
 	logger = logging.MustGetLogger("aptrust")
-	logging.SetLevel(logging.INFO, "aptrust")
-	logBackend := logging.NewLogBackend(io.Discard, "", stdlog.LstdFlags)
+	logging.SetLevel(logging.DEBUG, "aptrust")
+	logBackend := logging.NewLogBackend(outStream, "", stdlog.LstdFlags)
 	logging.SetBackend(logBackend)
 }

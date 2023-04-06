@@ -25,7 +25,7 @@ aptrust get workitem <id>`,
 		if id > 0 {
 			resp = client.WorkItemByID(id)
 		} else {
-			fmt.Fprintln(os.Stderr, "This call requires either a work item id")
+			fmt.Fprintln(os.Stderr, "This call requires an id (e.g. id=1234)")
 			os.Exit(EXIT_USER_ERR)
 		}
 		data, _ := resp.RawResponseData()
