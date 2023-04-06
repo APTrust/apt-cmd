@@ -5,7 +5,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 
+	"github.com/APTrust/preservation-services/network"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +26,20 @@ aptrust get object <object_identifier>
 aptrust get object <object_id>
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("get object called")
+		client, urlValues := InitRegistryRequest(args)
+		var resp *network.RegistryResponse
+		id, _ := strconv.ParseInt(urlValues.Get("id"), 10, 64)
+		identifier := urlValues.Get("identifier")
+		if id > 0 {
+			resp = client.IntellectualObjectByID(id)
+		} else if identifier != "" {
+			resp = client.IntellectualObjectByIdentifier(identifier)
+		} else {
+			fmt.Fprintln(os.Stderr, "This call requires either an id or an identifier")
+		}
+		data, _ := resp.RawResponseData()
+		fmt.Println(string(data))
+		os.Exit(EXIT_OK)
 	},
 }
 

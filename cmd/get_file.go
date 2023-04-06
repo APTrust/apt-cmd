@@ -25,11 +25,15 @@ aptrust get file <file_id>
 	Run: func(cmd *cobra.Command, args []string) {
 		client, urlValues := InitRegistryRequest(args)
 		var resp *network.RegistryResponse
-		fileID, _ := strconv.ParseInt(urlValues.Get("id"), 10, 64)
-		if fileID > 0 {
-			resp = client.GenericFileByID(fileID)
+		id, _ := strconv.ParseInt(urlValues.Get("id"), 10, 64)
+		identifier := urlValues.Get("identifier")
+		if id > 0 {
+			resp = client.GenericFileByID(id)
+		} else if identifier != "" {
+			resp = client.GenericFileByIdentifier(identifier)
 		} else {
-			resp = client.GenericFileByIdentifier(urlValues.Get("identifier"))
+			fmt.Fprintln(os.Stderr, "This call requires either an id or an identifier")
+			os.Exit(EXIT_USER_ERR)
 		}
 		data, _ := resp.RawResponseData()
 		fmt.Println(string(data))

@@ -2,7 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 
+	"github.com/APTrust/preservation-services/network"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +19,18 @@ number.
 
 aptrust get workitem <id>`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("get workitem called")
+		client, urlValues := InitRegistryRequest(args)
+		var resp *network.RegistryResponse
+		id, _ := strconv.ParseInt(urlValues.Get("id"), 10, 64)
+		if id > 0 {
+			resp = client.WorkItemByID(id)
+		} else {
+			fmt.Fprintln(os.Stderr, "This call requires either a work item id")
+			os.Exit(EXIT_USER_ERR)
+		}
+		data, _ := resp.RawResponseData()
+		fmt.Println(string(data))
+		os.Exit(EXIT_OK)
 	},
 }
 
