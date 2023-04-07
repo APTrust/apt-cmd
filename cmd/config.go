@@ -9,9 +9,10 @@ type Config struct {
 	RegistryAPIKey     string
 	AWSKey             string
 	AWSSecret          string
-	ReceivingBucket    string
-	RestorationBucket  string
-	DownloadDir        string
+	S3Host             string
+	UploadBucket       string
+	DownloadBucket     string
+	LocalDownloadDir   string
 	ConfigSource       string
 }
 
@@ -44,6 +45,9 @@ func (config *Config) ValidateAWSCredentials() error {
 	if config.AWSSecret == "" {
 		errMsg += "AWS Secret is missing from config. "
 	}
+	if config.S3Host == "" {
+		errMsg += "S3 host is missing from config. "
+	}
 	if errMsg != "" {
 		errMsg += fmt.Sprintf("(Config source: %s)", config.ConfigSource)
 		return fmt.Errorf(errMsg)
@@ -71,9 +75,10 @@ func (config *Config) String() string {
 	RegistryAPIKey:          %s
 	AWSKey:                  %s
 	AWSSecret:               %s
-	ReceivingBucket:         %s
-	RestorationBucket:       %s
-	DownloadDir:             %s
+	S3Host:                  %s
+	UploadBucket:            %s
+	DownloadBucket:          %s
+	LocalDownloadDir:        %s
 	ConfigSource:            %s`,
 		config.RegistryURL,
 		config.RegistryAPIVersion,
@@ -81,8 +86,9 @@ func (config *Config) String() string {
 		regAPIKey,
 		awsKey,
 		awsSecret,
-		config.ReceivingBucket,
-		config.RestorationBucket,
-		config.DownloadDir,
+		config.S3Host,
+		config.UploadBucket,
+		config.DownloadBucket,
+		config.LocalDownloadDir,
 		config.ConfigSource)
 }

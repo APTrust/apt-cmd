@@ -10,6 +10,8 @@ import (
 	"strings"
 
 	"github.com/APTrust/preservation-services/network"
+	"github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
 const (
@@ -117,4 +119,23 @@ func PrettyPrintJSON(jsonBytes []byte) {
 		os.Exit(EXIT_RUNTIME_ERR)
 	}
 	fmt.Println(pretty.String())
+}
+
+func GetS3Client() *minio.Client {
+	err := config.ValidateAWSCredentials()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Missing S3 connection info:", err)
+		os.Exit(EXIT_USER_ERR)
+	}
+	client, err := minio.New(
+		config.S3Host,
+		&minio.Options{
+			Creds:  credentials.NewStaticV4(config.AWSKey, config.AWSSecret, ""),
+			Secure: true,
+		})
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error creating S3 client:", err)
+		os.Exit(EXIT_RUNTIME_ERR)
+	}
+	return client
 }
