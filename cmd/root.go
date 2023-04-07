@@ -22,7 +22,6 @@ var rootCmd = &cobra.Command{
 var config *Config
 var debug bool
 var cfgFile string
-var format string
 var logger *logging.Logger
 
 func Execute() {

@@ -90,9 +90,6 @@ When you run a quick report, this tool ignores your other query params.
 
 func init() {
 	listCmd.AddCommand(workitemsCmd)
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	workitemsCmd.Flags().StringP("report", "r", "", "Run report: inprocess, problems, restorations")
 }
 

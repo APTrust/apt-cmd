@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -13,7 +10,25 @@ import (
 var objectsCmd = &cobra.Command{
 	Use:   "objects",
 	Short: "List object records from the APTrust Registry.",
-	Long:  ``,
+	Long: `List objects from the APTrust Registry, with filters.
+
+	--------------
+	Basic Examples
+	--------------
+		
+	List 20 objects ordered by identifer:
+		
+		aptrust list objects sort='identifier' per_page='20'
+	
+	List 20 objects reverse ordered by identifer:
+		
+		aptrust list objects sort='identifier__desc' per_page='20'
+	
+	List objects created after April 6, 2023
+	
+		aptrust list files created_at__gteq='2023-04-06'
+	
+		`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client, urlValues := InitRegistryRequest(args)
 		EnsureDefaultListParams(urlValues)
@@ -26,14 +41,4 @@ var objectsCmd = &cobra.Command{
 
 func init() {
 	listCmd.AddCommand(objectsCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// objectsCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// objectsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

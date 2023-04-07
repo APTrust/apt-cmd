@@ -43,7 +43,4 @@ aptrust get file <file_id>
 
 func init() {
 	getCmd.AddCommand(fileCmd)
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// fileCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

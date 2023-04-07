@@ -10,7 +10,25 @@ import (
 var filesCmd = &cobra.Command{
 	Use:   "files",
 	Short: "List files from the APTrust Registry",
-	Long:  ``,
+	Long: `List files from the APTrust Registry, with filters.
+
+--------------
+Basic Examples
+--------------
+	
+List files belonging to object test.edu/my_bag, ordered by identifer:
+	
+	aptrust list files intellectual_object_identifier='test.edu/my_bag' sort='identifier'
+
+List only the first 10 files from that same bag:
+	
+	aptrust list files intellectual_object_identifier='test.edu/my_bag' sort='identifier' per_page=10
+
+List files created after April 6, 2023
+
+	aptrust list files created_at__gteq='2023-04-06'
+
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client, urlValues := InitRegistryRequest(args)
 		EnsureDefaultListParams(urlValues)
@@ -23,14 +41,4 @@ var filesCmd = &cobra.Command{
 
 func init() {
 	listCmd.AddCommand(filesCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// filesCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// filesCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
