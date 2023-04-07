@@ -56,9 +56,9 @@ func (config *Config) String() string {
 	if config.RegistryAPIKey == "" {
 		regAPIKey = "MISSING!"
 	}
-	awsKey := "MISSING!"
-	if len(config.AWSKey) > 3 {
-		awsKey = fmt.Sprintf("**********%s", config.AWSKey[len(config.AWSKey)-3:])
+	awsKey := "[redacted]"
+	if config.AWSKey == "" {
+		awsKey = "MISSING!"
 	}
 	awsSecret := "[redacted]"
 	if config.AWSSecret == "" {
