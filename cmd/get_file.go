@@ -35,8 +35,13 @@ aptrust get file <file_id>
 			fmt.Fprintln(os.Stderr, "This call requires either an id or an identifier")
 			os.Exit(EXIT_USER_ERR)
 		}
-		data, _ := resp.RawResponseData()
-		fmt.Println(string(data))
+		if format == "text" {
+			gf := resp.GenericFile()
+			PrettyPrintFile(gf)
+		} else {
+			data, _ := resp.RawResponseData()
+			fmt.Println(string(data))
+		}
 		os.Exit(EXIT_OK)
 	},
 }

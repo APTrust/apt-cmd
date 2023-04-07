@@ -22,6 +22,7 @@ var rootCmd = &cobra.Command{
 var config *Config
 var debug bool
 var cfgFile string
+var format string
 var logger *logging.Logger
 
 func Execute() {
@@ -36,6 +37,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.aptrust)")
 	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "print debug output to stderr")
+	rootCmd.PersistentFlags().StringVar(&format, "format", "json", "output format 'text' or 'json' (default)")
 }
 
 func initConfig() {
