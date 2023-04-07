@@ -83,7 +83,7 @@ When you run a quick report, this tool ignores your other query params.
 
 		resp := client.WorkItemList(urlValues)
 		data, _ := resp.RawResponseData()
-		fmt.Println(string(data))
+		PrettyPrintJSON(data)
 		os.Exit(EXIT_OK)
 	},
 }

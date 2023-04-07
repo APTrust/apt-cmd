@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/url"
@@ -105,4 +107,14 @@ func EnsureDefaultListParams(values url.Values) {
 	if values.Get("per_page") == "" {
 		values.Set("per_page", "25")
 	}
+}
+
+func PrettyPrintJSON(jsonBytes []byte) {
+	pretty := new(bytes.Buffer)
+	err := json.Indent(pretty, jsonBytes, "", "  ")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error formatting JSON:", err)
+		os.Exit(EXIT_RUNTIME_ERR)
+	}
+	fmt.Println(pretty.String())
 }

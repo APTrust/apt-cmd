@@ -36,9 +36,10 @@ aptrust get object <object_id>
 			resp = client.IntellectualObjectByIdentifier(identifier)
 		} else {
 			fmt.Fprintln(os.Stderr, "This call requires either an id or an identifier")
+			os.Exit(EXIT_USER_ERR)
 		}
 		data, _ := resp.RawResponseData()
-		fmt.Println(string(data))
+		PrettyPrintJSON(data)
 		os.Exit(EXIT_OK)
 	},
 }

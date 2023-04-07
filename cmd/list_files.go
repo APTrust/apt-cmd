@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -17,7 +16,7 @@ var filesCmd = &cobra.Command{
 		EnsureDefaultListParams(urlValues)
 		resp := client.GenericFileList(urlValues)
 		data, _ := resp.RawResponseData()
-		fmt.Println(string(data))
+		PrettyPrintJSON(data)
 		os.Exit(EXIT_OK)
 	},
 }
