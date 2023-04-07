@@ -1,7 +1,10 @@
 package cmd
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/APTrust/preservation-services/constants"
@@ -9,7 +12,17 @@ import (
 	"github.com/APTrust/preservation-services/network"
 )
 
-func PrettyPrint(resp *network.RegistryResponse, objType network.RegistryObjectType) {
+func PrettyPrintJSON(jsonBytes []byte) {
+	pretty := new(bytes.Buffer)
+	err := json.Indent(pretty, jsonBytes, "", "  ")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error formatting JSON:", err)
+		os.Exit(EXIT_RUNTIME_ERR)
+	}
+	fmt.Println(pretty.String())
+}
+
+func PrettyPrintList(resp *network.RegistryResponse, objType network.RegistryObjectType) {
 	fmt.Println(objType, ":", resp.Count, "results")
 	switch objType {
 	case network.RegistryIntellectualObject:

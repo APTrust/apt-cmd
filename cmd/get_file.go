@@ -40,7 +40,7 @@ aptrust get file <file_id>
 			PrettyPrintFile(gf)
 		} else {
 			data, _ := resp.RawResponseData()
-			fmt.Println(string(data))
+			PrettyPrintJSON(data)
 		}
 		os.Exit(EXIT_OK)
 	},

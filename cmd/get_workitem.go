@@ -28,8 +28,13 @@ aptrust get workitem <id>`,
 			fmt.Fprintln(os.Stderr, "This call requires an id (e.g. id=1234)")
 			os.Exit(EXIT_USER_ERR)
 		}
-		data, _ := resp.RawResponseData()
-		fmt.Println(string(data))
+		if format == "text" {
+			item := resp.WorkItem()
+			PrettyPrintWorkItem(item)
+		} else {
+			data, _ := resp.RawResponseData()
+			PrettyPrintJSON(data)
+		}
 		os.Exit(EXIT_OK)
 	},
 }
