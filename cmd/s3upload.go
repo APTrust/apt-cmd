@@ -40,16 +40,9 @@ to quickly create a Cobra application.`,
 			fmt.Fprintln(os.Stderr, "File", file, "is a directory")
 			os.Exit(EXIT_USER_ERR)
 		}
-		bucket := cmd.Flags().Lookup("bucket").Value.String()
-		s3Host := cmd.Flags().Lookup("host").Value.String()
-		if s3Host == "" {
-			fmt.Fprintln(os.Stderr, "Missing required param --host")
-			os.Exit(EXIT_USER_ERR)
-		}
-		if bucket == "" {
-			fmt.Fprintln(os.Stderr, "Missing required param --bucket")
-			os.Exit(EXIT_USER_ERR)
-		}
+		s3Host := GetParam(cmd.Flags(), "host", "Missing required param --host")
+		bucket := GetParam(cmd.Flags(), "bucket", "Missing required param --bucket")
+		DisallowPreservationBucket(bucket)
 		key := cmd.Flags().Lookup("key").Value.String()
 		if key == "" {
 			key = path.Base(file)
@@ -75,20 +68,7 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(s3uploadCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// s3uploadCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// s3uploadCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
-	// aptrust s3upload source dest
 	s3uploadCmd.Flags().StringP("host", "H", "", "S3 host name. E.g. s3.amazonaws.com.")
 	s3uploadCmd.Flags().StringP("bucket", "b", "", "Bucket to upload from")
 	s3uploadCmd.Flags().StringP("key", "k", "", "Key (name of object) to download")
-
 }

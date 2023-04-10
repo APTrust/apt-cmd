@@ -12,6 +12,7 @@ import (
 	"github.com/APTrust/preservation-services/network"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/spf13/pflag"
 )
 
 const (
@@ -138,4 +139,21 @@ func GetS3Client(s3Host string) *minio.Client {
 		os.Exit(EXIT_RUNTIME_ERR)
 	}
 	return client
+}
+
+func DisallowPreservationBucket(bucket string) {
+	b := strings.ToLower(bucket)
+	if strings.Contains(b, "aptrust") && strings.Contains(b, "preservation") {
+		fmt.Fprintln(os.Stderr, "Illegal bucket:", bucket, "MC Hammer says you can't touch this!")
+		os.Exit(EXIT_USER_ERR)
+	}
+}
+
+func GetParam(flags *pflag.FlagSet, paramName, errMsg string) string {
+	paramValue := flags.Lookup(paramName).Value.String()
+	if paramValue == "" && errMsg != "" {
+		fmt.Fprintln(os.Stderr, errMsg)
+		os.Exit(EXIT_USER_ERR)
+	}
+	return paramValue
 }
