@@ -1,7 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
@@ -37,4 +33,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// s3uploadCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	// aptrust s3upload source dest
 }

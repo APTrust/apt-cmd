@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -32,6 +29,11 @@ to quickly create a Cobra application.`,
 			fmt.Fprintln(os.Stderr, "Missing required param --bucket")
 			os.Exit(EXIT_USER_ERR)
 		}
+		s3Host := cmd.Flags().Lookup("host").Value.String()
+		if s3Host == "" {
+			fmt.Fprintln(os.Stderr, "Missing required param --host")
+			os.Exit(EXIT_USER_ERR)
+		}
 		format := cmd.Flags().Lookup("format").Value.String()
 		if format != "" && format != "text" && format != "json" {
 			fmt.Fprintln(os.Stderr, "Unknown format:", format, ". Defaulting to json.")
@@ -42,8 +44,8 @@ to quickly create a Cobra application.`,
 			maxKeys = 50
 			logger.Info("Could not parse maxitems. Defaulting to 50.")
 		}
-		logger.Infof("Listing up to %d items from %s/%s with prefix '%s'", maxKeys, config.S3Host, bucket, prefix)
-		client := GetS3Client()
+		logger.Infof("Listing up to %d items from %s/%s with prefix '%s'", maxKeys, s3Host, bucket, prefix)
+		client := GetS3Client(s3Host)
 
 		doneCh := make(chan struct{})
 		defer close(doneCh)
@@ -87,15 +89,7 @@ to quickly create a Cobra application.`,
 
 func init() {
 	listCmd.AddCommand(bucketCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// bucketCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
+	bucketCmd.Flags().StringP("host", "H", "", "S3 host name. E.g. s3.amazonaws.com.")
 	bucketCmd.Flags().StringP("bucket", "b", "", "Bucket to list")
 	bucketCmd.Flags().StringP("prefix", "p", "", "List objects with this prefix")
 	bucketCmd.Flags().IntP("maxitems", "m", 50, "Maximum number of items to list (default = 50)")

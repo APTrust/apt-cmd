@@ -121,14 +121,14 @@ func PrettyPrintJSON(jsonBytes []byte) {
 	fmt.Println(pretty.String())
 }
 
-func GetS3Client() *minio.Client {
+func GetS3Client(s3Host string) *minio.Client {
 	err := config.ValidateAWSCredentials()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Missing S3 connection info:", err)
 		os.Exit(EXIT_USER_ERR)
 	}
 	client, err := minio.New(
-		config.S3Host,
+		s3Host,
 		&minio.Options{
 			Creds:  credentials.NewStaticV4(config.AWSKey, config.AWSSecret, ""),
 			Secure: true,

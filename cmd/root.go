@@ -74,10 +74,6 @@ func initConfig() {
 		RegistryAPIVersion: viper.GetString("APTRUST_REGISTRY_API_VERSION"),
 		AWSKey:             viper.GetString("APTRUST_AWS_KEY"),
 		AWSSecret:          viper.GetString("APTRUST_AWS_SECRET"),
-		S3Host:             viper.GetString("APTRUST_S3_HOST"),
-		UploadBucket:       viper.GetString("APTRUST_RECEIVING_BUCKET"),
-		DownloadBucket:     viper.GetString("APTRUST_RESTORATION_BUCKET"),
-		LocalDownloadDir:   viper.GetString("APTRUST_DOWNLOAD_DIR"),
 		ConfigSource:       configSource,
 	}
 	logger.Debug(config.String())
