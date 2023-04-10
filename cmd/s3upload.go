@@ -14,13 +14,24 @@ import (
 // s3uploadCmd represents the s3upload command
 var s3uploadCmd = &cobra.Command{
 	Use:   "s3upload",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Upload a file to an S3-compatible service",
+	Long: `Upload a file to any S3-compatible service. For this to work,
+you will need to have APTRUST_AWS_KEY and APTRUST_AWS_SECRET set in your 
+environment, or in a config file specified with the --config flag.
+	
+Examples:
+	
+Upload file photo.jpg to Amazon's S3 service:
+	
+	s3upload --host=s3.amazonaws.com --bucket="my-bucket" photo.jpg 
+	
+Upload the same file, but call it renamed.jpg in S3:
+	
+   s3upload --host=s3.amazonaws.com  \
+			--bucket="my-bucket" \
+			--key='renamed.jpg' \
+			photo.jpg
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.ValidateAWSCredentials()
 		file := ""

@@ -143,8 +143,13 @@ func GetS3Client(s3Host string) *minio.Client {
 
 func DisallowPreservationBucket(bucket string) {
 	b := strings.ToLower(bucket)
-	if strings.Contains(b, "aptrust") && strings.Contains(b, "preservation") {
-		fmt.Fprintln(os.Stderr, "Illegal bucket:", bucket, "MC Hammer says you can't touch this!")
+	msg := fmt.Sprintf("Illegal bucket: '%s'. MC Hammer says you can't touch this!", bucket)
+	if strings.Contains(b, "aptrust.") && strings.Contains(b, ".preservation") {
+		fmt.Fprintln(os.Stderr, msg)
+		os.Exit(EXIT_USER_ERR)
+	}
+	if strings.Contains(b, "aptrust-") && strings.Contains(b, "-wasabi-") {
+		fmt.Fprintln(os.Stderr, msg)
 		os.Exit(EXIT_USER_ERR)
 	}
 }
