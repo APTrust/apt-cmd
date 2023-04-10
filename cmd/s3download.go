@@ -30,10 +30,11 @@ Download the same file and save it with a custom name on your desktop:
    s3download --host=s3.amazonaws.com  \
 			  --bucket="my-bucket" \
 			  --key='photo_001.jpg' \
-			  --saveas="$HOME/Desktop/vacation.jpg"
+			  --save-as="$HOME/Desktop/vacation.jpg"
 		   
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+		config.ValidateAWSCredentials()
 		bucket := cmd.Flags().Lookup("bucket").Value.String()
 		if bucket == "" {
 			fmt.Fprintln(os.Stderr, "Missing required param --bucket")
@@ -49,7 +50,7 @@ Download the same file and save it with a custom name on your desktop:
 			fmt.Fprintln(os.Stderr, "Missing required param --key")
 			os.Exit(EXIT_USER_ERR)
 		}
-		saveas := cmd.Flags().Lookup("saveas").Value.String()
+		saveas := cmd.Flags().Lookup("save-as").Value.String()
 		if saveas == "" {
 			saveas = key
 		}
@@ -84,5 +85,5 @@ func init() {
 	s3downloadCmd.Flags().StringP("host", "H", "", "S3 host name. E.g. s3.amazonaws.com.")
 	s3downloadCmd.Flags().StringP("bucket", "b", "", "Bucket to download from")
 	s3downloadCmd.Flags().StringP("key", "k", "", "Key (name of object) to download")
-	s3downloadCmd.Flags().StringP("saveas", "s", "", "Name the file in which to save the download")
+	s3downloadCmd.Flags().StringP("save-as", "s", "", "Name the file in which to save the download")
 }
