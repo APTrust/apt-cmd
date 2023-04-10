@@ -4,14 +4,28 @@ These command-line tools enable you to validate bags and query data in the APTru
 
 ## Commands
 
-### aptrust lookup
+### aptrust registry
 
-* work items
-* intellectual objects
-* generic files
-* premis events
-* my institution
+* get/list work items
+* get/list intellectual objects
+* get/list generic files
 
-### aptrust validate
+### aptrust bag
 
-* validate a bag
+* validate 
+* create 
+* extract-meta
+
+### aptrust S3
+
+* list
+* upload
+* download
+* delete
+
+### aptrust sftp
+
+* list
+* upload
+* download
+* delete
