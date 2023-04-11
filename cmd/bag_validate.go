@@ -74,7 +74,7 @@ BagIt specification.
 
 func init() {
 	bagCmd.AddCommand(validateCmd)
-	validateCmd.Flags().StringP("profile", "p", "", "BagIt profile: aptrust or btr")
+	validateCmd.Flags().StringP("profile", "p", "", "BagIt profile: 'aptrust', 'btr' or 'empty'")
 }
 
 func loadProfile(name string) (*bagit.Profile, error) {

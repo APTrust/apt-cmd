@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/APTrust/dart-runner/bagit"
 	"github.com/APTrust/preservation-services/network"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -71,6 +72,34 @@ func GetUrlValues(args []string) url.Values {
 		v.Add(pair.Name, pair.Value)
 	}
 	return v
+}
+
+// GetTagValues parses tag values from the command line.
+// Format is "tagfile.txt/Tag-Name=Value". If tag file name
+// is missing from param, it's assumed to be bag-info.txt,
+// which is the only customizable tag file in the BagIt standard.
+func GetTagValues(args []string) []*bagit.TagDefinition {
+	pairs := ParseArgPairs(args)
+	tagDefs := make([]*bagit.TagDefinition, 0)
+	for _, pair := range pairs {
+		var tagDef *bagit.TagDefinition
+		parts := strings.SplitN(pair.Name, "/", 2)
+		if len(parts) == 1 {
+			tagDef = &bagit.TagDefinition{
+				TagFile:   "bag-info.txt",
+				TagName:   pair.Name,
+				UserValue: pair.Value,
+			}
+		} else {
+			tagDef = &bagit.TagDefinition{
+				TagFile:   parts[0],
+				TagName:   parts[1],
+				UserValue: pair.Value,
+			}
+		}
+		tagDefs = append(tagDefs, tagDef)
+	}
+	return tagDefs
 }
 
 func NewRegistryClient(config *Config) (*network.RegistryClient, error) {
