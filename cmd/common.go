@@ -14,6 +14,8 @@ import (
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/spf13/pflag"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 const (
@@ -78,8 +80,20 @@ func GetUrlValues(args []string) url.Values {
 // Format is "tagfile.txt/Tag-Name=Value". If tag file name
 // is missing from param, it's assumed to be bag-info.txt,
 // which is the only customizable tag file in the BagIt standard.
+//
+// As with the LOC's BagIt-Python library, we convert the first
+// letter of each word in tag names to upper-case. For example,
+// "source-organization" will be converted here to
+// "Source-Organization".
+//
+// While the BagIt spec does not officially say that tag names must
+// use title case, the examples in the BagIt spec and common convention
+// use title-cased tag names. Some parses may expect or demand
+// title-cased names when validating bags, so we will stick to title
+// case for now.
 func GetTagValues(args []string) []*bagit.TagDefinition {
 	pairs := ParseArgPairs(args)
+	titleCase := cases.Title(language.English)
 	tagDefs := make([]*bagit.TagDefinition, 0)
 	for _, pair := range pairs {
 		var tagDef *bagit.TagDefinition
@@ -87,13 +101,13 @@ func GetTagValues(args []string) []*bagit.TagDefinition {
 		if len(parts) == 1 {
 			tagDef = &bagit.TagDefinition{
 				TagFile:   "bag-info.txt",
-				TagName:   pair.Name,
+				TagName:   titleCase.String(pair.Name),
 				UserValue: pair.Value,
 			}
 		} else {
 			tagDef = &bagit.TagDefinition{
 				TagFile:   parts[0],
-				TagName:   parts[1],
+				TagName:   titleCase.String(parts[1]),
 				UserValue: pair.Value,
 			}
 		}
