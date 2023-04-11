@@ -13,16 +13,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// bucketCmd represents the bucket command
-var bucketCmd = &cobra.Command{
-	Use:   "bucket",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+// s3ListCmd represents the list bucket command
+var s3ListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List items in an S3 bucket",
+	Long: `Download a file from any S3 storage. For this to work,
+you will need to have APTRUST_AWS_KEY and APTRUST_AWS_SECRET set in your 
+environment, or in a config file specified with the --config flag.
+	
+Examples:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+List items in my_bucket with prefix "photo":
+
+    aptrust s3 list --host=s3.amazonaws.com --bucket=my_bucket --prefix=photo
+
+List 10 items in my_bucket with prefix "photo", using plain text output:
+
+    aptrust s3 list --host=s3.amazonaws.com \
+                    --bucket=my_bucket \
+                    --prefix=photo \
+                    --maxitems=10 \
+                    --format=text
+
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		bucket := cmd.Flags().Lookup("bucket").Value.String()
 		if bucket == "" {
@@ -88,10 +101,10 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	listCmd.AddCommand(bucketCmd)
-	bucketCmd.Flags().StringP("host", "H", "", "S3 host name. E.g. s3.amazonaws.com.")
-	bucketCmd.Flags().StringP("bucket", "b", "", "Bucket to list")
-	bucketCmd.Flags().StringP("prefix", "p", "", "List objects with this prefix")
-	bucketCmd.Flags().IntP("maxitems", "m", 50, "Maximum number of items to list (default = 50)")
-	bucketCmd.Flags().StringP("format", "f", "", "Output format: 'text' or 'json' (default = 'json')")
+	s3Cmd.AddCommand(s3ListCmd)
+	s3ListCmd.Flags().StringP("host", "H", "", "S3 host name. E.g. s3.amazonaws.com.")
+	s3ListCmd.Flags().StringP("bucket", "b", "", "Bucket to list")
+	s3ListCmd.Flags().StringP("prefix", "p", "", "List objects with this prefix")
+	s3ListCmd.Flags().IntP("maxitems", "m", 50, "Maximum number of items to list (default = 50)")
+	s3ListCmd.Flags().StringP("format", "f", "", "Output format: 'text' or 'json' (default = 'json')")
 }

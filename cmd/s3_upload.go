@@ -13,7 +13,7 @@ import (
 
 // s3uploadCmd represents the s3upload command
 var s3uploadCmd = &cobra.Command{
-	Use:   "s3upload",
+	Use:   "upload",
 	Short: "Upload a file to an S3-compatible service",
 	Long: `Upload a file to any S3-compatible service. For this to work,
 you will need to have APTRUST_AWS_KEY and APTRUST_AWS_SECRET set in your 
@@ -23,14 +23,15 @@ Examples:
 	
 Upload file photo.jpg to Amazon's S3 service:
 	
-	s3upload --host=s3.amazonaws.com --bucket="my-bucket" photo.jpg 
+    s3upload --host=s3.amazonaws.com --bucket="my-bucket" photo.jpg 
 	
 Upload the same file, but call it renamed.jpg in S3:
 	
-   s3upload --host=s3.amazonaws.com  \
-			--bucket="my-bucket" \
-			--key='renamed.jpg' \
-			photo.jpg
+    s3upload --host=s3.amazonaws.com  \
+             --bucket="my-bucket" \
+             --key='renamed.jpg' \
+             photo.jpg
+			 
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.ValidateAWSCredentials()
@@ -78,7 +79,7 @@ Upload the same file, but call it renamed.jpg in S3:
 }
 
 func init() {
-	rootCmd.AddCommand(s3uploadCmd)
+	s3Cmd.AddCommand(s3uploadCmd)
 	s3uploadCmd.Flags().StringP("host", "H", "", "S3 host name. E.g. s3.amazonaws.com.")
 	s3uploadCmd.Flags().StringP("bucket", "b", "", "Bucket to upload from")
 	s3uploadCmd.Flags().StringP("key", "k", "", "Key (name of object) to download")

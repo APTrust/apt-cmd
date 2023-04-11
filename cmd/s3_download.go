@@ -13,9 +13,9 @@ import (
 
 // s3downloadCmd represents the s3download command
 var s3downloadCmd = &cobra.Command{
-	Use:   "s3download",
-	Short: "Download a file from any S3-compatible service",
-	Long: `Download a file from any S3-compatible service. For this to work,
+	Use:   "download",
+	Short: "Download a file from S3 storage",
+	Long: `Download a file from any S3 storage. For this to work,
 you will need to have APTRUST_AWS_KEY and APTRUST_AWS_SECRET set in your 
 environment, or in a config file specified with the --config flag.
 
@@ -27,10 +27,10 @@ Download a file from Amazon's S3 service into the current directory:
 
 Download the same file and save it with a custom name on your desktop:
 
-   s3download --host=s3.amazonaws.com  \
-			  --bucket="my-bucket" \
-			  --key='photo_001.jpg' \
-			  --save-as="$HOME/Desktop/vacation.jpg"
+    s3download --host=s3.amazonaws.com  \
+               --bucket="my-bucket" \
+               --key='photo_001.jpg' \
+               --save-as="$HOME/Desktop/vacation.jpg"
 		   
 `,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -71,7 +71,7 @@ Download the same file and save it with a custom name on your desktop:
 }
 
 func init() {
-	rootCmd.AddCommand(s3downloadCmd)
+	s3Cmd.AddCommand(s3downloadCmd)
 	s3downloadCmd.Flags().StringP("host", "H", "", "S3 host name. E.g. s3.amazonaws.com.")
 	s3downloadCmd.Flags().StringP("bucket", "b", "", "Bucket to download from")
 	s3downloadCmd.Flags().StringP("key", "k", "", "Key (name of object) to download")
