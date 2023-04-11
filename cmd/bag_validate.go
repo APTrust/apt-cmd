@@ -21,19 +21,19 @@ var validateCmd = &cobra.Command{
 Currently, this supports only tarred bags. The following commands
 validate a bag according to the APTrust BagIt profile:
 
-aptrust validate my_bag.tar
-aptrust validate -p aptrust my_bag.tar
+  aptrust bag validate my_bag.tar
+  aptrust bag validate -p aptrust my_bag.tar
 
 To validate a bag using the Beyond the Repository (BTR) profile:
 
-aptrust validate -p btr my_bag.tar
+  aptrust bag validate -p btr my_bag.tar
 
 To validate a bag using the empty profile:
 
-aptrust validate -p empty my_bag.tar
+  aptrust bag validate -p empty my_bag.tar
 
 The empty profile simply ensures the bag is valid according to the general
-BagIt specification.
+BagIt specification. 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		profileName := cmd.Flag("profile").Value.String()
@@ -73,7 +73,7 @@ BagIt specification.
 }
 
 func init() {
-	rootCmd.AddCommand(validateCmd)
+	bagCmd.AddCommand(validateCmd)
 	validateCmd.Flags().StringP("profile", "p", "", "BagIt profile: aptrust or btr")
 }
 
