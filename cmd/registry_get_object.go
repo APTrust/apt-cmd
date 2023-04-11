@@ -19,8 +19,8 @@ such as 'example.edu/photos'. Ids are numeric.
 
 Examples:
 
-aptrust get object <object_identifier>
-aptrust get object <object_id>
+aptrust registry get object <object_identifier>
+aptrust registry get object <object_id>
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		client, urlValues := InitRegistryRequest(args)

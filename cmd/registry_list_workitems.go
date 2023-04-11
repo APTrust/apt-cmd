@@ -15,55 +15,52 @@ var workitemsCmd = &cobra.Command{
 	Short: "List work item records from the APTrust registry.",
 	Long: `List work items from the APTrust registry, or run a report.
 
---------------
-Basic Examples
---------------
+Examples:
 
 List recent ingests:
 
-	aptrust list workitems action='Ingest' sort='date_processed__desc'
+  aptrust registry list workitems action='Ingest' sort='date_processed__desc'
 
 List all work items since April 6, 2023:
 
-	aptrust list workitems date_processed__gteq='2023-04-06' sort='date_processed__desc'
+  aptrust registry list workitems date_processed__gteq='2023-04-06' sort='date_processed__desc'
 
 List failed work items:
 
-	aptrust list workitems status='Failed' sort='date_processed__desc'
+  aptrust registry list workitems status='Failed' sort='date_processed__desc'
 
 List work items pertaining to a tar file you uploaded:
 
-	aptrust list workitems name='bag-of-photos.tar'
+  aptrust registry list workitems name='bag-of-photos.tar'
 
 List work items pertaining to a bag with a specific etag:
 
-	aptrust list workitems etag='987654321-100'
+  aptrust registry list workitems etag='987654321-100'
 
 List work items pertaining to a specific intellectual object:
 
-	aptrust list workitems object_identifier='test.edu/TestBag'
+  aptrust registry list workitems object_identifier='test.edu/TestBag'
 
 List restorations or deletions of a specific file:
 
-	aptrust list workitems generic_file_identifier='test.edu/TestBag/data/photo1.jpg'
+  aptrust registry list workitems generic_file_identifier='test.edu/TestBag/data/photo1.jpg'
 
--------------
-Quick Reports
--------------
+
+Quick Reports:
 
 List all items from the past 30 days that are still in process:
 
-	aptrust list workitems --report=inprocess
+  aptrust registry list workitems --report=inprocess
 
 List all items from the past 30 days that failed or were cancelled:
 
-	aptrust list workitems --report=problems
+  aptrust registry list workitems --report=problems
 
 List all restorations from the past 30 days:
 
-	aptrust list workitems --report=restorations
+  aptrust registry list workitems --report=restorations
 
-When you run a quick report, this tool ignores your other query params.
+When running quick reports, this tool ignores all other query params.
 
 	`,
 	Run: func(cmd *cobra.Command, args []string) {

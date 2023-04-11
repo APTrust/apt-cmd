@@ -77,7 +77,3 @@ func init() {
 	s3downloadCmd.Flags().StringP("key", "k", "", "Key (name of object) to download")
 	s3downloadCmd.Flags().StringP("save-as", "s", "", "Name the file in which to save the download")
 }
-
-func initParams() {
-
-}

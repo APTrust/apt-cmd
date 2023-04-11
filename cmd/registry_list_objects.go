@@ -12,21 +12,19 @@ var objectsCmd = &cobra.Command{
 	Short: "List object records from the APTrust Registry.",
 	Long: `List objects from the APTrust Registry, with filters.
 
-	--------------
-	Basic Examples
-	--------------
+Examples:
+
+List 20 objects ordered by identifer:
 		
-	List 20 objects ordered by identifer:
+  aptrust registry list objects sort='identifier' per_page='20'
+	
+List 20 objects reverse ordered by identifer:
 		
-		aptrust list objects sort='identifier' per_page='20'
+  aptrust registry list objects sort='identifier__desc' per_page='20'
 	
-	List 20 objects reverse ordered by identifer:
-		
-		aptrust list objects sort='identifier__desc' per_page='20'
+List objects created after April 6, 2023
 	
-	List objects created after April 6, 2023
-	
-		aptrust list files created_at__gteq='2023-04-06'
+  aptrust registry list files created_at__gteq='2023-04-06'
 	
 		`,
 	Run: func(cmd *cobra.Command, args []string) {

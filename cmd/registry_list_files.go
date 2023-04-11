@@ -18,15 +18,15 @@ Basic Examples
 	
 List files belonging to object test.edu/my_bag, ordered by identifer:
 	
-	aptrust list files intellectual_object_identifier='test.edu/my_bag' sort='identifier'
+  aptrust registry list files intellectual_object_identifier='test.edu/my_bag' sort='identifier'
 
 List only the first 10 files from that same bag:
 	
-	aptrust list files intellectual_object_identifier='test.edu/my_bag' sort='identifier' per_page=10
+  aptrust registry list files intellectual_object_identifier='test.edu/my_bag' sort='identifier' per_page=10
 
 List files created after April 6, 2023
 
-	aptrust list files created_at__gteq='2023-04-06'
+  aptrust registry list files created_at__gteq='2023-04-06'
 
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
