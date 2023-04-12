@@ -109,13 +109,13 @@ func GetTagValues(args []string) []*bagit.TagDefinition {
 		if len(parts) == 1 {
 			tagDef = &bagit.TagDefinition{
 				TagFile:   "bag-info.txt",
-				TagName:   titleCase.String(pair.Name),
+				TagName:   titleCase.String(strings.ToLower(pair.Name)),
 				UserValue: pair.Value,
 			}
 		} else {
 			tagDef = &bagit.TagDefinition{
 				TagFile:   parts[0],
-				TagName:   titleCase.String(parts[1]),
+				TagName:   titleCase.String(strings.ToLower(parts[1])),
 				UserValue: pair.Value,
 			}
 		}
