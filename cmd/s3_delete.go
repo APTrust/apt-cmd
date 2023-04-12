@@ -41,7 +41,7 @@ successfully deleted or if the key wasn't in the bucket to begin with.
 		}
 
 		logger.Infof("Deleting object %s from %s/%s", key, s3Host, bucket)
-		client := GetS3Client(s3Host)
+		client := NewS3Client(config, s3Host)
 		err := client.RemoveObject(context.Background(), bucket, key, minio.RemoveObjectOptions{})
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Error deleting object: ", err)

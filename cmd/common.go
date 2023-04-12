@@ -183,10 +183,10 @@ func PrettyPrintJSON(jsonBytes []byte) {
 	fmt.Println(pretty.String())
 }
 
-// GetS3Client returns a client that can talk to an S3 endpoint.
+// NewS3Client returns a client that can talk to an S3 endpoint.
 // It will return an error if the config is lacking S3 authentication
 // settings.
-func GetS3Client(s3Host string) *minio.Client {
+func NewS3Client(config *Config, s3Host string) *minio.Client {
 	err := config.ValidateAWSCredentials()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Missing S3 connection info:", err)

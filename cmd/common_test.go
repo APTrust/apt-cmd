@@ -142,14 +142,36 @@ func TestPrettyPrintJSON(t *testing.T) {
 	assert.Equal(t, expected, string(prettyJson))
 }
 
-func TestGetS3Client(t *testing.T) {
-
+func TestNewS3Client(t *testing.T) {
+	config := getTestConfig(true)
+	client := cmd.NewS3Client(config, "s3.amazonaws.com")
+	assert.NotNil(t, client)
+	assert.Equal(t, "s3.amazonaws.com", client.EndpointURL().Host)
 }
 
 func TestLooksLikePreservationBucket(t *testing.T) {
-
+	yes := []string{
+		"aptrust.preservation.oregon",
+		"aptrust.preservation.storage",
+		"aptrust.test.preservation.va",
+		"aptrust-staging-wasabi-va",
+		"aptrust-wasabi-or",
+	}
+	no := []string{
+		"aptrust.receiving.virginia.edu",
+		"aptrust.test.restore.vt.edu",
+		"apt-wasabi-staging-va",
+		"apt-wasabi-test-or",
+	}
+	for _, bucket := range yes {
+		assert.True(t, cmd.LooksLikePreservationBucket(bucket))
+	}
+	for _, bucket := range no {
+		assert.False(t, cmd.LooksLikePreservationBucket(bucket))
+	}
 }
 
 func TestGetParam(t *testing.T) {
-
+	// Currently, there's no way to test this, except by
+	// using exec and hacking something ugly :(
 }

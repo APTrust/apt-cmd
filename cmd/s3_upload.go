@@ -66,7 +66,7 @@ Upload the same file, but call it renamed.jpg in S3:
 		}
 
 		logger.Infof("Uploading file %s to %s/%s/%s", file, s3Host, bucket, key)
-		client := GetS3Client(s3Host)
+		client := NewS3Client(config, s3Host)
 		uploadInfo, err := client.FPutObject(context.Background(), bucket, key, file, minio.PutObjectOptions{})
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Error uploading file:", err)

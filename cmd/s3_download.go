@@ -49,7 +49,7 @@ Download the same file and save it with a custom name on your desktop:
 			saveas = path.Join(saveas, key)
 		}
 		logger.Infof("Downloading object %s from %s/%s", key, s3Host, bucket)
-		client := GetS3Client(s3Host)
+		client := NewS3Client(config, s3Host)
 		obj, err := client.GetObject(context.Background(), bucket, key, minio.GetObjectOptions{})
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Error retrieving S3 object:", err)
