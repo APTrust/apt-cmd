@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"embed"
-	"encoding/json"
 	"fmt"
 	"os"
 
@@ -45,7 +44,7 @@ BagIt specification.
 			fmt.Println("Profile and path to bag are required.")
 			os.Exit(EXIT_USER_ERR)
 		}
-		profile, err := loadProfile(profileName)
+		profile, err := LoadProfile(profileName)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(EXIT_RUNTIME_ERR)
@@ -75,24 +74,4 @@ BagIt specification.
 func init() {
 	bagCmd.AddCommand(validateCmd)
 	validateCmd.Flags().StringP("profile", "p", "", "BagIt profile: 'aptrust', 'btr' or 'empty'")
-}
-
-func loadProfile(name string) (*bagit.Profile, error) {
-	profile := &bagit.Profile{}
-	var data []byte
-	var err error
-	switch name {
-	case "aptrust":
-		data, err = profiles.ReadFile("profiles/aptrust-v2.2.json")
-	case "btr":
-		data, err = profiles.ReadFile("profiles/btr-v1.0.json")
-	case "empty":
-		data, err = profiles.ReadFile("profiles/empty_profile.json")
-	default:
-		err = fmt.Errorf("missing or invalid profile. Only 'aptrust', 'btr' and 'empty' are supported")
-	}
-	if err == nil && len(data) > 1 {
-		err = json.Unmarshal(data, profile)
-	}
-	return profile, err
 }

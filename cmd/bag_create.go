@@ -23,7 +23,7 @@ var createCmd = &cobra.Command{
 			fmt.Println("Profile and path to directory are required.")
 			os.Exit(EXIT_USER_ERR)
 		}
-		profile, err := loadProfile(profileName)
+		profile, err := LoadProfile(profileName)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(EXIT_RUNTIME_ERR)

@@ -242,3 +242,24 @@ func GetFlagValue(flags *pflag.FlagSet, flagName, errMsg string) string {
 	}
 	return paramValue
 }
+
+// LoadProfile loads a BagIt profile.
+func LoadProfile(name string) (*bagit.Profile, error) {
+	profile := &bagit.Profile{}
+	var data []byte
+	var err error
+	switch name {
+	case "aptrust":
+		data, err = profiles.ReadFile("profiles/aptrust-v2.2.json")
+	case "btr":
+		data, err = profiles.ReadFile("profiles/btr-v1.0.json")
+	case "empty":
+		data, err = profiles.ReadFile("profiles/empty_profile.json")
+	default:
+		err = fmt.Errorf("missing or invalid profile. Only 'aptrust', 'btr' and 'empty' are supported")
+	}
+	if err == nil && len(data) > 1 {
+		err = json.Unmarshal(data, profile)
+	}
+	return profile, err
+}

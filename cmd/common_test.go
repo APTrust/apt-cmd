@@ -175,3 +175,20 @@ func TestGetParam(t *testing.T) {
 	// Currently, there's no way to test this, except by
 	// using exec and hacking something ugly :(
 }
+
+func TestLoadProfile(t *testing.T) {
+	profile, err := cmd.LoadProfile("aptrust")
+	require.Nil(t, err)
+	require.NotNil(t, profile)
+	assert.Equal(t, "https://raw.githubusercontent.com/APTrust/preservation-services/master/profiles/aptrust-v2.2.json", profile.BagItProfileInfo.BagItProfileIdentifier)
+
+	profile, err = cmd.LoadProfile("btr")
+	require.Nil(t, err)
+	require.NotNil(t, profile)
+	assert.Equal(t, "https://raw.githubusercontent.com/dpscollaborative/btr_bagit_profile/master/btr-bagit-profile.json", profile.BagItProfileInfo.BagItProfileIdentifier)
+
+	profile, err = cmd.LoadProfile("empty")
+	require.Nil(t, err)
+	require.NotNil(t, profile)
+	assert.Equal(t, "https://raw.githubusercontent.com/APTrust/dart/tree/master/profiles/empty_profile.json", profile.BagItProfileInfo.BagItProfileIdentifier)
+}
