@@ -55,6 +55,9 @@ type ArgPair struct {
 	Value string
 }
 
+// ParseArgPairs converts command-line args that look like
+// key-value pairs into ArgPair objects. It ignores flags
+// and args that do not contain an equal sign.
 func ParseArgPairs(args []string) []ArgPair {
 	pairs := make([]ArgPair, 0)
 	for _, arg := range args {
@@ -67,6 +70,11 @@ func ParseArgPairs(args []string) []ArgPair {
 	return pairs
 }
 
+// GetUrlValues converts command-line args that look like
+// name-value pairs into URL values. It converts only those
+// args that contain an equal sign. If an arg is specified
+// more than once, the resulting url.Values will include
+// all of that arg's values.
 func GetUrlValues(args []string) url.Values {
 	pairs := ParseArgPairs(args)
 	v := url.Values{}
@@ -116,6 +124,9 @@ func GetTagValues(args []string) []*bagit.TagDefinition {
 	return tagDefs
 }
 
+// NewRegistryClient returns a new client that can talk to
+// the APTrust Registry. It will return an error if the
+// config lacks essential Registry settings.
 func NewRegistryClient(config *Config) (*network.RegistryClient, error) {
 	err := config.ValidateRegistryConfig()
 	if err != nil {
@@ -134,7 +145,9 @@ func NewRegistryClient(config *Config) (*network.RegistryClient, error) {
 	return client, err
 }
 
-func InitRegistryRequest(args []string) (*network.RegistryClient, url.Values) {
+// InitRegistryRequest initializes a registry REST client
+// and the params to be sent in a query string.
+func InitRegistryRequest(config *Config, args []string) (*network.RegistryClient, url.Values) {
 	urlValues := GetUrlValues(args)
 	client, err := NewRegistryClient(config)
 	if err != nil {
@@ -146,6 +159,9 @@ func InitRegistryRequest(args []string) (*network.RegistryClient, url.Values) {
 	return client, urlValues
 }
 
+// EnsureDefaultListParams adds sort and per_page params to url.Values
+// if they're not already there. This ensures that we don't get too many
+// results per page, and that paging works correctly.
 func EnsureDefaultListParams(values url.Values) {
 	if values.Get("sort") == "" {
 		values.Set("sort", "id")
@@ -155,6 +171,8 @@ func EnsureDefaultListParams(values url.Values) {
 	}
 }
 
+// PrettyPrintJSON converts unformatted JSON, such as that returned by
+// the Registry, to formatted JSON.
 func PrettyPrintJSON(jsonBytes []byte) {
 	pretty := new(bytes.Buffer)
 	err := json.Indent(pretty, jsonBytes, "", "  ")
@@ -165,6 +183,9 @@ func PrettyPrintJSON(jsonBytes []byte) {
 	fmt.Println(pretty.String())
 }
 
+// GetS3Client returns a client that can talk to an S3 endpoint.
+// It will return an error if the config is lacking S3 authentication
+// settings.
 func GetS3Client(s3Host string) *minio.Client {
 	err := config.ValidateAWSCredentials()
 	if err != nil {
@@ -184,21 +205,37 @@ func GetS3Client(s3Host string) *minio.Client {
 	return client
 }
 
-func DisallowPreservationBucket(bucket string) {
+// LooksLikePreservationBucket returns true if the bucket name
+// looks like the name of an APTrust preservation bucket.
+//
+// The caller should exit if the user tries to access an APTrust
+// preservation bucket. Though these buckets have strict access
+// controls with only a single IAM user allowed to write or delete files,
+// we want to protect against the case where some inattentive APTrust
+// admin runs this tool with credentials belonging to that one IAM user.
+// (E.g. An APTrust admin runs this on a production server, and
+// the app pulls crendentials from the environment.)
+// We call this only on S3 upload and delete.
+func LooksLikePreservationBucket(bucket string) bool {
+	looksLikePrez := false
 	b := strings.ToLower(bucket)
-	msg := fmt.Sprintf("Illegal bucket: '%s'. MC Hammer says you can't touch this!", bucket)
 	if strings.Contains(b, "aptrust.") && strings.Contains(b, ".preservation") {
-		fmt.Fprintln(os.Stderr, msg)
-		os.Exit(EXIT_USER_ERR)
+		looksLikePrez = true
 	}
 	if strings.Contains(b, "aptrust-") && strings.Contains(b, "-wasabi-") {
-		fmt.Fprintln(os.Stderr, msg)
-		os.Exit(EXIT_USER_ERR)
+		looksLikePrez = true
 	}
+	return looksLikePrez
 }
 
-func GetParam(flags *pflag.FlagSet, paramName, errMsg string) string {
-	paramValue := flags.Lookup(paramName).Value.String()
+// GetFlagValue returns the parsed value of flagName. If you specify
+// a non-empty error message, this will cause the program to exit with
+// code EXIT_USER_ERROR and will print the message.
+//
+// Call this with an empty error message for optional flags, and it
+// won't exit if the flag is missing.
+func GetFlagValue(flags *pflag.FlagSet, flagName, errMsg string) string {
+	paramValue := flags.Lookup(flagName).Value.String()
 	if paramValue == "" && errMsg != "" {
 		fmt.Fprintln(os.Stderr, errMsg)
 		os.Exit(EXIT_USER_ERR)

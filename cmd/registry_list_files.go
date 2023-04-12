@@ -30,7 +30,7 @@ List files created after April 6, 2023
 
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client, urlValues := InitRegistryRequest(args)
+		client, urlValues := InitRegistryRequest(config, args)
 		EnsureDefaultListParams(urlValues)
 		resp := client.GenericFileList(urlValues)
 		data, _ := resp.RawResponseData()

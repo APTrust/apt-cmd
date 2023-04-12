@@ -19,7 +19,7 @@ number.
 
 aptrust registry get workitem <id>`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client, urlValues := InitRegistryRequest(args)
+		client, urlValues := InitRegistryRequest(config, args)
 		var resp *network.RegistryResponse
 		id, _ := strconv.ParseInt(urlValues.Get("id"), 10, 64)
 		if id > 0 {

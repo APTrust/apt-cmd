@@ -64,7 +64,7 @@ When running quick reports, this tool ignores all other query params.
 
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		client, urlValues := InitRegistryRequest(args)
+		client, urlValues := InitRegistryRequest(config, args)
 		EnsureDefaultListParams(urlValues)
 
 		report := cmd.Flags().Lookup("report").Value.String()

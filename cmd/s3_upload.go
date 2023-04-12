@@ -52,9 +52,14 @@ Upload the same file, but call it renamed.jpg in S3:
 			fmt.Fprintln(os.Stderr, "File", file, "is a directory")
 			os.Exit(EXIT_USER_ERR)
 		}
-		s3Host := GetParam(cmd.Flags(), "host", "Missing required param --host")
-		bucket := GetParam(cmd.Flags(), "bucket", "Missing required param --bucket")
-		DisallowPreservationBucket(bucket)
+		s3Host := GetFlagValue(cmd.Flags(), "host", "Missing required param --host")
+		bucket := GetFlagValue(cmd.Flags(), "bucket", "Missing required param --bucket")
+
+		if LooksLikePreservationBucket(bucket) {
+			fmt.Fprintln(os.Stderr, "Upload to preservation bucket not allowed")
+			os.Exit(EXIT_USER_ERR)
+		}
+
 		key := cmd.Flags().Lookup("key").Value.String()
 		if key == "" {
 			key = path.Base(file)

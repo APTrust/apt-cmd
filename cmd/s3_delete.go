@@ -32,10 +32,13 @@ successfully deleted or if the key wasn't in the bucket to begin with.
 	Run: func(cmd *cobra.Command, args []string) {
 		config.ValidateAWSCredentials()
 
-		s3Host := GetParam(cmd.Flags(), "host", "Missing required param --host")
-		bucket := GetParam(cmd.Flags(), "bucket", "Missing required param --bucket")
-		key := GetParam(cmd.Flags(), "key", "Missing required param --key")
-		DisallowPreservationBucket(bucket)
+		s3Host := GetFlagValue(cmd.Flags(), "host", "Missing required param --host")
+		bucket := GetFlagValue(cmd.Flags(), "bucket", "Missing required param --bucket")
+		key := GetFlagValue(cmd.Flags(), "key", "Missing required param --key")
+		if LooksLikePreservationBucket(bucket) {
+			fmt.Fprintln(os.Stderr, "Deletion from preservation bucket not allowed")
+			os.Exit(EXIT_USER_ERR)
+		}
 
 		logger.Infof("Deleting object %s from %s/%s", key, s3Host, bucket)
 		client := GetS3Client(s3Host)

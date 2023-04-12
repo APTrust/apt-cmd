@@ -1,6 +1,9 @@
 package cmd_test
 
 import (
+	"io/ioutil"
+	"net/url"
+	"os"
 	"testing"
 
 	"github.com/APTrust/partner-tools/cmd"
@@ -73,26 +76,77 @@ func TestGetTagValues(t *testing.T) {
 }
 
 func TestNewRegistryClient(t *testing.T) {
+	emptyConfig := getTestConfig(false)
+	client, err := cmd.NewRegistryClient(emptyConfig)
+	assert.NotNil(t, err)
+	assert.Nil(t, client)
 
+	config := getTestConfig(true)
+	client, err = cmd.NewRegistryClient(config)
+	assert.Nil(t, err)
+	assert.NotNil(t, client)
+	assert.Equal(t, config.RegistryAPIKey, client.APIKey)
+	assert.Equal(t, config.RegistryAPIVersion, client.APIVersion)
+	assert.Equal(t, config.RegistryEmail, client.APIUser)
+	assert.Equal(t, config.RegistryURL, client.HostURL)
 }
 
 func TestInitRegistryRequest(t *testing.T) {
-
+	config := getTestConfig(true)
+	client, urlValues := cmd.InitRegistryRequest(config, testArgs)
+	assert.NotNil(t, client)
+	assert.Equal(t, 3, len(urlValues))
+	assert.Equal(t, "value1", urlValues.Get("pair1"))
+	assert.Equal(t, "value2", urlValues.Get("pair2"))
+	assert.Equal(t, "value3", urlValues.Get("pair3"))
 }
 
 func TestEnsureDefaultListParams(t *testing.T) {
+	params := url.Values{}
+	assert.Empty(t, params.Get("sort"))
+	assert.Empty(t, params.Get("per_page"))
 
+	cmd.EnsureDefaultListParams(params)
+	assert.Equal(t, "id", params.Get("sort"))
+	assert.Equal(t, "25", params.Get("per_page"))
+
+	// This function should not overwrite param
+	// values if they're already specified.
+	params.Set("sort", "name__desc")
+	params.Set("per_page", "100")
 }
 
 func TestPrettyPrintJSON(t *testing.T) {
+	uglyAssJson := []byte(`{"id":1,"name":"Oscar","home":"Garbage Can"}`)
+	expected := `{
+  "id": 1,
+  "name": "Oscar",
+  "home": "Garbage Can"
+}
+`
+	tempFile, err := os.CreateTemp(os.TempDir(), "ptool-test")
+	require.Nil(t, err)
 
+	actualStdOut := os.Stdout
+	os.Stdout = tempFile
+	defer func() {
+		os.Stdout = actualStdOut
+	}()
+
+	cmd.PrettyPrintJSON(uglyAssJson)
+	tempFile.Close()
+
+	prettyJson, err := ioutil.ReadFile(tempFile.Name())
+	require.Nil(t, err)
+
+	assert.Equal(t, expected, string(prettyJson))
 }
 
 func TestGetS3Client(t *testing.T) {
 
 }
 
-func TestDisallowPreservationBucket(t *testing.T) {
+func TestLooksLikePreservationBucket(t *testing.T) {
 
 }
 

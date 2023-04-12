@@ -36,9 +36,9 @@ Download the same file and save it with a custom name on your desktop:
 	Run: func(cmd *cobra.Command, args []string) {
 		config.ValidateAWSCredentials()
 
-		s3Host := GetParam(cmd.Flags(), "host", "Missing required param --host")
-		bucket := GetParam(cmd.Flags(), "bucket", "Missing required param --bucket")
-		key := GetParam(cmd.Flags(), "key", "Missing required param --key")
+		s3Host := GetFlagValue(cmd.Flags(), "host", "Missing required param --host")
+		bucket := GetFlagValue(cmd.Flags(), "bucket", "Missing required param --bucket")
+		key := GetFlagValue(cmd.Flags(), "key", "Missing required param --key")
 
 		saveas := cmd.Flags().Lookup("save-as").Value.String()
 		if saveas == "" {
