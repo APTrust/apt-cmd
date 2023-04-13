@@ -28,10 +28,10 @@ omit the file name, it defaults to bag-info.txt. For example, the following
 two tags will both be written into the Source-Organization tag in 
 bag-info.txt:
 
-  bag-info.txt/Source-Organization="Faber College" 
-  Source-Organization="Faber College"
+  --tags="bag-info.txt/Source-Organization=Faber College" 
+  --tags="Source-Organization=Faber College"
 
-Note that tag values are quoted in their entirety: both the name and
+Note that tag values are quoted in their entirety, both the name and
 the value.
 
 Apply double quotes to values containing special characters such as 
@@ -54,14 +54,23 @@ tag files.
 
   aptrust bag create \
     --profile=aptrust \
-    --manifest-algs="md5,sha256" \
-	--bag-dir="/home/josie/photos" \
-    --output-dir="/home/josie/bags" \
-    --tags="aptrust-info.txt/Title=My Bag of Photos" \
-    --tags="aptrust-info.txt/Access=Institution" \ 
-    --tags="aptrust-info.txt/Storage-Option=Standard" \ 
-    --tags="bag-info.txt/Source-Organization=Faber College" \ 
-    --tags='Custom-Tag=Single quoted because it {contains} $weird &characters' 
+    --manifest-algs='md5,sha256' \
+    --output-file='/home/diamond/tmp/bags' \
+    --debug \
+    --bag-dir='/home/diamond/aptrust/dart/profiles' \
+    --tags='aptrust-info.txt/Title=My Bag of Photos' \
+    --tags='aptrust-info.txt/Access=Institution' \
+    --tags='aptrust-info.txt/Storage-Option=Standard' \
+    --tags='bag-info.txt/Source-Organization=Faber College' \
+    --tags='Custom-Tag=Single quoted because it {contains} $weird &characters'
+
+Troubleshooting:
+
+1. Use the --debug flag to get the program to tell what it thinks it's
+   supposed to be doing.
+2. If you use backslashes, as in the example able, be sure there are no
+   trailing spaces or any characters other than a newline following the 
+   backslash.
 
 Limitations:
 
@@ -70,6 +79,7 @@ Limitations:
 2. For now, all bags will be output as tar files.
 3. This tool currently supports only the md5, sha1, sha256, and sha512 
    algorithms for manifests and tag manifests.
+4. This tool currently will not generate a fetch.txt file.
 
 See also:
 
@@ -80,7 +90,7 @@ See also:
 			fmt.Println("You must specify at least one manifest algorithm. See `aptrust bag create --help`.")
 			os.Exit(EXIT_USER_ERR)
 		}
-		outputDir := GetFlagValue(cmd.Flags(), "output-dir", "Flag --output-dir is required.")
+		outputFile := GetFlagValue(cmd.Flags(), "output-file", "Flag --output-file is required.")
 		profileName := GetFlagValue(cmd.Flags(), "profile", "Flag --profile is required.")
 		bagDir := GetFlagValue(cmd.Flags(), "bag-dir", "Flag --bag-dir is required.")
 		profile, err := LoadProfile(profileName)
@@ -93,7 +103,7 @@ See also:
 		tags = EnsureDefaultTags(tags)
 
 		logger.Debug("Directory to Bag:   ", bagDir)
-		logger.Debug("Output Directory:   ", outputDir)
+		logger.Debug("Output File:        ", outputFile)
 		logger.Debug("Profile Name:       ", profileName)
 		logger.Debug("Profile:            ", profile.Name)
 		logger.Debug("Manifest Algorithms:", strings.Join(manifestAlgs, ", "))
@@ -102,8 +112,11 @@ See also:
 			logger.Debug("File:", t.TagFile, "Name:", t.TagName, "Value:", t.GetValue())
 		}
 		if debug {
+			// On Linux, if the call to ValidateTags below causes an
+			// exit, we exit so quickly that log messages don't get
+			// flushed to stderr. So we force that here.
 			os.Stderr.Sync()
-			time.Sleep(2 * time.Second)
+			time.Sleep(500 * time.Millisecond)
 		}
 		errors := ValidateTags(profile, tags)
 		if len(errors) > 0 {
@@ -123,13 +136,20 @@ See also:
 			os.Exit(EXIT_USER_ERR)
 		}
 
-		filestat, err := os.Stat(absPath)
+		files, err := util.RecursiveFileList(absPath)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Error accessing", absPath, ":", err.Error())
+			fmt.Fprintln(os.Stderr, "Cannot build list of all files to be bagged. Be sure you have read permissions on all of these files.", err.Error())
 			os.Exit(EXIT_USER_ERR)
 		}
-		filesToBag := []*util.ExtendedFileInfo{
-			util.NewExtendedFileInfo(absPath, filestat),
+
+		// Don't loop through these unless we have to.
+		// There could be a million of them.
+		if debug {
+			logger.Debug("Absolute path of directory to bag:", absPath)
+			logger.Debug("Files to bag:")
+			for _, f := range files {
+				logger.Debug(f.FullPath)
+			}
 		}
 
 		// Apply the user-supplied tag values
@@ -138,7 +158,7 @@ See also:
 		}
 
 		// Create the bag
-		bagger := bagit.NewBagger(outputDir, profile, filesToBag)
+		bagger := bagit.NewBagger(outputFile, profile, files)
 		ok := bagger.Run()
 		if !ok {
 			for key, value := range bagger.Errors {
@@ -146,7 +166,8 @@ See also:
 			}
 			os.Exit(EXIT_RUNTIME_ERR)
 		}
-		fmt.Printf(`{ "result": "OK", "outputPath": "%s" }\n`, bagger.OutputPath)
+		msg := fmt.Sprintf(`{ "result": "OK", "outputFile": "%s" }`, bagger.OutputPath)
+		fmt.Println(msg)
 		os.Exit(EXIT_OK)
 	},
 }
@@ -155,7 +176,7 @@ func init() {
 	bagCmd.AddCommand(createCmd)
 	createCmd.Flags().StringP("profile", "p", "", "BagIt profile: 'aptrust', 'btr' or 'empty'")
 	createCmd.Flags().StringP("bag-dir", "b", "", "Directory containing files you want to package into a bag")
-	createCmd.Flags().StringP("output-dir", "o", "", "Output directory. Where should we write the bag?")
+	createCmd.Flags().StringP("output-file", "o", "", "Output file. Where should we write the bag?")
 	createCmd.Flags().StringSliceVarP(&manifestAlgs, "manifest-algs", "m", []string{""}, "Manifest algorithms. Specify one, or use comma-separated list for multiple. Supported algorithms: md5, sha1, sha256, sha512. Default is sha256.")
 	createCmd.Flags().StringSliceVarP(&userSuppliedTags, "tags", "t", []string{""}, "Tag values to write into tag files. You can specify this flag multiple times. See --help for full documentation.")
 }
