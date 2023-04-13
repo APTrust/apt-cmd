@@ -84,7 +84,9 @@ func GetUrlValues(args []string) url.Values {
 	return v
 }
 
-// GetTagValues parses tag values from the command line.
+// GetTagValues parses tag values from the supplied string slice,
+// which should be collected from the --tags flags.
+//
 // Format is "tagfile.txt/Tag-Name=Value". If tag file name
 // is missing from param, it's assumed to be bag-info.txt,
 // which is the only customizable tag file in the BagIt standard.
@@ -262,4 +264,10 @@ func LoadProfile(name string) (*bagit.Profile, error) {
 		err = json.Unmarshal(data, profile)
 	}
 	return profile, err
+}
+
+func PrintErrors(errors []string) {
+	for _, err := range errors {
+		fmt.Fprintln(os.Stderr, err)
+	}
 }

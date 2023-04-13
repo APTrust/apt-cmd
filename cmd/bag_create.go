@@ -3,49 +3,161 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/APTrust/dart-runner/bagit"
+	"github.com/APTrust/dart-runner/util"
 	"github.com/spf13/cobra"
 )
+
+var manifestAlgs []string
+var userSuppliedTags []string
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a BagIt bag",
-	Long:  `Create a BagIt bag`,
+	Long: `Package a directory into a BagIt bag using a specific
+BagIt profile, manifest algorithms, and tag values. The example
+below demonstrates how to speficy flags and tag values.
+
+For tag values, use the format "filename.txt/Tag-Name=tag value". If you
+omit the file name, it defaults to bag-info.txt. For example, the following
+two tags will both be written into the Source-Organization tag in 
+bag-info.txt:
+
+  bag-info.txt/Source-Organization="Faber College" 
+  Source-Organization="Faber College"
+
+Note that tag values are quoted in their entirety: both the name and
+the value.
+
+Apply double quotes to values containing special characters such as 
+spaces and symbols and to values containing environment variables that 
+you want to expand, such as "$HOME".
+
+Apply single quotes to values containing symbols that you don't want
+the shell to expand, such as curly braces, ampersands, and random dollar 
+signs.
+
+You can specify any tag files and tag names you want.
+
+The following example packages the directory /home/josie/photos according
+to the APTrust BagIt profile and writes the tarred bag into 
+/home/josie/bags/photos.tar.
+
+This bag will include md5 and sha256 manifests and tag manifests. It will
+also includ the specified tags in the bag-info.txt and aptrust-info.txt
+tag files.
+
+  aptrust bag create \
+    --profile=aptrust \
+    --manifest-algs="md5,sha256" \
+	--bag-dir="/home/josie/photos" \
+    --output-dir="/home/josie/bags" \
+    --tags="aptrust-info.txt/Title=My Bag of Photos" \
+    --tags="aptrust-info.txt/Access=Institution" \ 
+    --tags="aptrust-info.txt/Storage-Option=Standard" \ 
+    --tags="bag-info.txt/Source-Organization=Faber College" \ 
+    --tags='Custom-Tag=Single quoted because it {contains} $weird &characters' 
+
+Limitations:
+
+1. This tool currently supports only APTrust, BTR, and empty/generic 
+   BagIt profiles.
+2. For now, all bags will be output as tar files.
+3. This tool currently supports only the md5, sha1, sha256, and sha512 
+   algorithms for manifests and tag manifests.
+
+See also:
+
+  aptrust bag validate --help
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		profileName := cmd.Flag("profile").Value.String()
-		pathToDir := ""
-		if len(args) > 0 {
-			pathToDir = args[0]
-		}
-		if profileName == "" || pathToDir == "" {
-			fmt.Println("Profile and path to directory are required.")
+		if len(manifestAlgs) == 0 {
+			fmt.Println("You must specify at least one manifest algorithm. See `aptrust bag create --help`.")
 			os.Exit(EXIT_USER_ERR)
 		}
+		outputDir := GetFlagValue(cmd.Flags(), "output-dir", "Flag --output-dir is required.")
+		profileName := GetFlagValue(cmd.Flags(), "profile", "Flag --profile is required.")
+		bagDir := GetFlagValue(cmd.Flags(), "bag-dir", "Flag --bag-dir is required.")
 		profile, err := LoadProfile(profileName)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(EXIT_RUNTIME_ERR)
 		}
 
-		tags := GetTagValues(args)
+		tags := GetTagValues(userSuppliedTags)
+		tags = EnsureDefaultTags(tags)
 
-		fmt.Println("Profile Name:", profileName)
-		fmt.Println("Directory:", pathToDir)
-		fmt.Println("Profile:", profile.Name)
-		fmt.Println("Tag Values:")
+		logger.Debug("Directory to Bag:   ", bagDir)
+		logger.Debug("Output Directory:   ", outputDir)
+		logger.Debug("Profile Name:       ", profileName)
+		logger.Debug("Profile:            ", profile.Name)
+		logger.Debug("Manifest Algorithms:", strings.Join(manifestAlgs, ", "))
+		logger.Debug("Tag Values:")
 		for _, t := range tags {
-			fmt.Println("File:", t.TagFile, "Name:", t.TagName, "Value:", t.UserValue)
+			logger.Debug("File:", t.TagFile, "Name:", t.TagName, "Value:", t.GetValue())
 		}
+		if debug {
+			os.Stderr.Sync()
+			time.Sleep(2 * time.Second)
+		}
+		errors := ValidateTags(profile, tags)
+		if len(errors) > 0 {
+			PrintErrors(errors)
+			os.Exit(EXIT_USER_ERR)
+		}
+
+		errors = ValidateManifestAlgorithms(profile, manifestAlgs)
+		if len(errors) > 0 {
+			PrintErrors(errors)
+			os.Exit(EXIT_USER_ERR)
+		}
+
+		absPath, err := filepath.Abs(bagDir)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Can't convert", bagDir, "to absolute path.", err.Error())
+			os.Exit(EXIT_USER_ERR)
+		}
+
+		filestat, err := os.Stat(absPath)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error accessing", absPath, ":", err.Error())
+			os.Exit(EXIT_USER_ERR)
+		}
+		filesToBag := []*util.ExtendedFileInfo{
+			util.NewExtendedFileInfo(absPath, filestat),
+		}
+
+		// Apply the user-supplied tag values
+		for _, tag := range tags {
+			profile.SetTagValue(tag.TagFile, tag.TagName, tag.GetValue())
+		}
+
+		// Create the bag
+		bagger := bagit.NewBagger(outputDir, profile, filesToBag)
+		ok := bagger.Run()
+		if !ok {
+			for key, value := range bagger.Errors {
+				fmt.Fprintln(os.Stderr, key, ":", value)
+			}
+			os.Exit(EXIT_RUNTIME_ERR)
+		}
+		fmt.Printf(`{ "result": "OK", "outputPath": "%s" }\n`, bagger.OutputPath)
+		os.Exit(EXIT_OK)
 	},
 }
 
 func init() {
 	bagCmd.AddCommand(createCmd)
 	createCmd.Flags().StringP("profile", "p", "", "BagIt profile: 'aptrust', 'btr' or 'empty'")
-	createCmd.Flags().StringSliceP("manifest-algs", "m", []string{"sha256"}, "Manifest algorithms. Use comma-separated list for multiple. Supported algorithms: md5, sha1, sha256, sha512. Default is sha256.")
+	createCmd.Flags().StringP("bag-dir", "b", "", "Directory containing files you want to package into a bag")
+	createCmd.Flags().StringP("output-dir", "o", "", "Output directory. Where should we write the bag?")
+	createCmd.Flags().StringSliceVarP(&manifestAlgs, "manifest-algs", "m", []string{""}, "Manifest algorithms. Specify one, or use comma-separated list for multiple. Supported algorithms: md5, sha1, sha256, sha512. Default is sha256.")
+	createCmd.Flags().StringSliceVarP(&userSuppliedTags, "tags", "t", []string{""}, "Tag values to write into tag files. You can specify this flag multiple times. See --help for full documentation.")
 }
 
 func EnsureDefaultTags(tags []*bagit.TagDefinition) []*bagit.TagDefinition {
