@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -155,6 +156,17 @@ See also:
 		// Apply the user-supplied tag values
 		for _, tag := range tags {
 			profile.SetTagValue(tag.TagFile, tag.TagName, tag.GetValue())
+		}
+
+		// Make sure the directory for our output target exists
+		outputDir := path.Dir(outputFile)
+		if !util.FileExists(outputDir) {
+			logger.Debugf("Creating directory %s because it doesn't exist.", outputDir)
+			err = os.MkdirAll(outputDir, 0755)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, "Error creating output directory", outputDir, ":", err)
+				os.Exit(EXIT_RUNTIME_ERR)
+			}
 		}
 
 		// Create the bag
