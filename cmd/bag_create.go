@@ -50,15 +50,14 @@ to the APTrust BagIt profile and writes the tarred bag into
 /home/josie/bags/photos.tar.
 
 This bag will include md5 and sha256 manifests and tag manifests. It will
-also includ the specified tags in the bag-info.txt and aptrust-info.txt
+also include the specified tags in the bag-info.txt and aptrust-info.txt
 tag files.
 
   aptrust bag create \
     --profile=aptrust \
     --manifest-algs='md5,sha256' \
-    --output-file='/home/diamond/tmp/bags' \
-    --debug \
-    --bag-dir='/home/diamond/aptrust/dart/profiles' \
+    --output-file='/home/josie/bags/photos.tar' \
+    --bag-dir='/home/josie/photos' \
     --tags='aptrust-info.txt/Title=My Bag of Photos' \
     --tags='aptrust-info.txt/Access=Institution' \
     --tags='aptrust-info.txt/Storage-Option=Standard' \
@@ -168,6 +167,14 @@ See also:
 				os.Exit(EXIT_RUNTIME_ERR)
 			}
 		}
+
+		// Make sure we can actually write to the output file
+		f, err := os.OpenFile(outputFile, os.O_RDWR, 0755)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Cannot open output file", outputFile, "for writing:", err)
+			os.Exit(EXIT_RUNTIME_ERR)
+		}
+		f.Close()
 
 		// Create the bag
 		bagger := bagit.NewBagger(outputFile, profile, files)
