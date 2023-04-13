@@ -70,7 +70,7 @@ When running quick reports, this tool ignores all other query params.
 		report := cmd.Flags().Lookup("report").Value.String()
 		if report != "" {
 			var err error
-			logger.Infof("Running WorkItem report %s", report)
+			logger.Debugf("Running WorkItem report %s", report)
 			urlValues, err = valuesForWorkItemReport(report)
 			if err != nil {
 				fmt.Fprintln(os.Stderr, err.Error())

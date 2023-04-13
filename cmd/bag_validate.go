@@ -49,6 +49,7 @@ BagIt specification.
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(EXIT_RUNTIME_ERR)
 		}
+		logger.Debugf("Validating bag %s using profile %s", pathToBag, profile.Name)
 		validator, err := bagit.NewValidator(pathToBag, profile)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())

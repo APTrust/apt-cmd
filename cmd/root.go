@@ -87,6 +87,6 @@ func initLogger() {
 	}
 	logger = logging.MustGetLogger("aptrust")
 	logging.SetLevel(logging.DEBUG, "aptrust")
-	logBackend := logging.NewLogBackend(outStream, "", stdlog.LstdFlags)
+	logBackend := logging.NewLogBackend(outStream, "[debug] ", stdlog.Lmsgprefix)
 	logging.SetBackend(logBackend)
 }

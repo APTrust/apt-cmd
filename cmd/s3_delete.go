@@ -40,7 +40,7 @@ successfully deleted or if the key wasn't in the bucket to begin with.
 			os.Exit(EXIT_USER_ERR)
 		}
 
-		logger.Infof("Deleting object %s from %s/%s", key, s3Host, bucket)
+		logger.Debugf("Deleting object %s from %s/%s", key, s3Host, bucket)
 		client := NewS3Client(config, s3Host)
 		err := client.RemoveObject(context.Background(), bucket, key, minio.RemoveObjectOptions{})
 		if err != nil {

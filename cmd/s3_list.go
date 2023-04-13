@@ -55,9 +55,9 @@ List 10 items in my_bucket with prefix "photo", using plain text output:
 		maxKeys, err := strconv.Atoi(cmd.Flags().Lookup("maxitems").Value.String())
 		if err != nil {
 			maxKeys = 50
-			logger.Info("Could not parse maxitems. Defaulting to 50.")
+			logger.Debug("Could not parse maxitems. Defaulting to 50.")
 		}
-		logger.Infof("Listing up to %d items from %s/%s with prefix '%s'", maxKeys, s3Host, bucket, prefix)
+		logger.Debugf("Listing up to %d items from %s/%s with prefix '%s'", maxKeys, s3Host, bucket, prefix)
 		client := NewS3Client(config, s3Host)
 
 		doneCh := make(chan struct{})
