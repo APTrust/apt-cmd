@@ -75,6 +75,10 @@ func EnsureDefaultTags(tags []*bagit.TagDefinition) []*bagit.TagDefinition {
 	return tags
 }
 
+// ValidateTags verifies that tags required by the BagIt profile are
+// present and contain valid values. We check this BEFORE bagging because
+// in case where the user is packaging 500+ GB, they don't want to wait
+// two hours to find out their bag is invalid.
 func ValidateTags(profile *bagit.Profile, tags []*bagit.TagDefinition) []string {
 	errors := make([]string, 0)
 	for _, tagDef := range profile.Tags {
@@ -87,7 +91,7 @@ func ValidateTags(profile *bagit.Profile, tags []*bagit.TagDefinition) []string 
 		if userTag != nil && userTag.UserValue != "" {
 			hasValue = true
 		}
-		if !tagDef.IsLegalValue(userTag.UserValue) {
+		if userTag != nil && !tagDef.IsLegalValue(userTag.UserValue) {
 			errors = append(errors, fmt.Sprintf("Tag %s/%s assigned illegal value '%s'. Valid values are: %s.", tagDef.TagFile, tagDef.TagName, userTag.UserValue, strings.Join(tagDef.Values, ",")))
 			continue
 		}
