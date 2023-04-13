@@ -45,8 +45,7 @@ var createCmd = &cobra.Command{
 func init() {
 	bagCmd.AddCommand(createCmd)
 	createCmd.Flags().StringP("profile", "p", "", "BagIt profile: 'aptrust', 'btr' or 'empty'")
-
-	// TODO: Add flag to specify manifest algorithms?
+	createCmd.Flags().StringSliceP("manifest-algs", "m", []string{"sha256"}, "Manifest algorithms. Use comma-separated list for multiple. Supported algorithms: md5, sha1, sha256, sha512. Default is sha256.")
 }
 
 func EnsureDefaultTags(tags []*bagit.TagDefinition) []*bagit.TagDefinition {
@@ -97,6 +96,37 @@ func ValidateTags(profile *bagit.Profile, tags []*bagit.TagDefinition) []string 
 		}
 		if tagDef.Required && !tagDef.EmptyOK && !hasValue {
 			errors = append(errors, fmt.Sprintf("Tag %s/%s is present but value cannot be empty. Please assign a value.", tagDef.TagFile, tagDef.TagName))
+		}
+	}
+	return errors
+}
+
+// ValidateManifestAlgorithms checks to see whether the user-specified manifest
+// algorithms are allowed by the profile, and whether the user specified all
+// of the profile's required algorithms. We do this work up front, before creating
+// the bag, to avoid creating an invalid bag.
+func ValidateManifestAlgorithms(profile *bagit.Profile, algs []string) []string {
+	errors := make([]string, 0)
+	for _, alg := range algs {
+		isAllowed := false
+		for _, allowedAlg := range profile.ManifestsAllowed {
+			if allowedAlg == alg {
+				isAllowed = true
+			}
+		}
+		if !isAllowed {
+			errors = append(errors, fmt.Sprintf("Manifest algorithm '%s' is not allowed in profile %s.", alg, profile.Name))
+		}
+	}
+	for _, requiredAlg := range profile.ManifestsRequired {
+		foundRequiredAlg := false
+		for _, alg := range algs {
+			if alg == requiredAlg {
+				foundRequiredAlg = true
+			}
+		}
+		if !foundRequiredAlg {
+			errors = append(errors, fmt.Sprintf("Profile %s requires manifest algorithm %s", profile.Name, requiredAlg))
 		}
 	}
 	return errors

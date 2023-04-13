@@ -1,6 +1,7 @@
 package cmd_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/APTrust/dart-runner/bagit"
@@ -105,4 +106,46 @@ func TestFindTag(t *testing.T) {
 	version = cmd.FindTag(tags, "bagit.txt", "BagIt-Version")
 	assert.NotNil(t, version)
 	assert.Equal(t, "BagIt-Version", version.TagName)
+}
+
+func TestValidateManifestAlgorithms(t *testing.T) {
+	profile, err := cmd.LoadProfile("aptrust")
+	require.Nil(t, err)
+	require.NotNil(t, profile)
+
+	expected := []string{
+		"Profile APTrust requires manifest algorithm md5",
+	}
+
+	algs := make([]string, 0)
+	errors := cmd.ValidateManifestAlgorithms(profile, algs)
+	assert.Equal(t, len(expected), len(errors))
+	assert.Equal(t, expected, errors)
+
+	// This should produce no errors, as both these algorithms
+	// are allowed by the profile.
+	algs = []string{
+		"md5",
+		"sha256",
+	}
+	errors = cmd.ValidateManifestAlgorithms(profile, algs)
+	fmt.Println(errors)
+	assert.Equal(t, 0, len(errors))
+
+	algs = []string{
+		"md4",
+		"sha1",
+		"md5",
+		"sha256",
+		"sha512",
+	}
+	expected = []string{
+		"Manifest algorithm 'md4' is not allowed in profile APTrust.",
+		"Manifest algorithm 'sha1' is not allowed in profile APTrust.",
+		"Manifest algorithm 'sha512' is not allowed in profile APTrust.",
+	}
+	errors = cmd.ValidateManifestAlgorithms(profile, algs)
+	assert.Equal(t, len(expected), len(errors))
+	assert.Equal(t, expected, errors)
+
 }
