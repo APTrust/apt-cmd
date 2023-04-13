@@ -49,7 +49,7 @@ func init() {
 	// TODO: Add flag to specify manifest algorithms?
 }
 
-func EnsureDefaultTags(tags []*bagit.TagDefinition) {
+func EnsureDefaultTags(tags []*bagit.TagDefinition) []*bagit.TagDefinition {
 	bagitVersion := FindTag(tags, "bagit.txt", "BagIt-Version")
 	if bagitVersion == nil {
 		versionTag := &bagit.TagDefinition{
@@ -58,6 +58,8 @@ func EnsureDefaultTags(tags []*bagit.TagDefinition) {
 			UserValue: "1.0",
 		}
 		tags = append(tags, versionTag)
+	} else if bagitVersion.GetValue() == "" {
+		bagitVersion.UserValue = "1.0"
 	}
 	encoding := FindTag(tags, "bagit.txt", "Tag-File-Character-Encoding")
 	if encoding == nil {
@@ -67,7 +69,10 @@ func EnsureDefaultTags(tags []*bagit.TagDefinition) {
 			UserValue: "UTF-8",
 		}
 		tags = append(tags, encodingTag)
+	} else if encoding.GetValue() == "" {
+		encoding.UserValue = "UTF-8"
 	}
+	return tags
 }
 
 func ValidateTags(profile *bagit.Profile, tags []*bagit.TagDefinition) []string {
