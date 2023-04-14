@@ -43,10 +43,9 @@ class TestRunner
   end
 
   def run_go_unit_tests(arg)
-    # Note: -p 1 flag helps prevent Redis overwrites on Linux/Travis
     puts "Starting unit tests..."
     arg = "./..." if arg.nil?
-    cmd = "go test -p 1 #{arg}"
+    cmd = "go test #{arg}"
     puts cmd
     pid = Process.spawn(env_hash, cmd, chdir: project_root)
     Process.wait pid
@@ -57,7 +56,7 @@ class TestRunner
     init_for_integration
     puts "Starting integration tests..."
     arg = "./..." if arg.nil?
-    cmd = "go test -p 1 -tags=integration #{arg}"
+    cmd = "go test -tags=integration #{arg}"
     puts cmd
     pid = Process.spawn(env_hash, cmd, chdir: project_root)
     Process.wait pid
