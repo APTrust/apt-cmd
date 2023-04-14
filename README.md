@@ -14,7 +14,7 @@ These command-line tools enable you to validate bags and query data in the APTru
 
 * validate 
 * create 
-* extract-meta
+* extract-meta  (coming later)
 
 ### aptrust S3
 
@@ -23,7 +23,7 @@ These command-line tools enable you to validate bags and query data in the APTru
 * download
 * delete
 
-### aptrust sftp
+### aptrust sftp (coming later)
 
 * list
 * upload

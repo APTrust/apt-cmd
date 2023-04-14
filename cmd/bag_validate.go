@@ -52,13 +52,14 @@ BagIt specification.
 		logger.Debugf("Validating bag %s using profile %s", pathToBag, profile.Name)
 		validator, err := bagit.NewValidator(pathToBag, profile)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
+			fmt.Fprintln(os.Stderr, "Can't create validator.", err.Error())
 			os.Exit(EXIT_RUNTIME_ERR)
 		}
 		err = validator.ScanBag()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
-			os.Exit(EXIT_RUNTIME_ERR)
+			fmt.Println("Bag is invalid due to the following errors:")
+			fmt.Println(err.Error())
+			os.Exit(EXIT_BAG_INVALID)
 		}
 		if validator.Validate() {
 			fmt.Println("Bag is valid according to", profileName, "profile.")
