@@ -180,6 +180,7 @@ func PrettyPrintJSON(jsonBytes []byte) {
 	err := json.Indent(pretty, jsonBytes, "", "  ")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error formatting JSON:", err)
+		fmt.Fprintln(os.Stderr, "Response body:", string(jsonBytes))
 		os.Exit(EXIT_RUNTIME_ERR)
 	}
 	fmt.Println(pretty.String())
