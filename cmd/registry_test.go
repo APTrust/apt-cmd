@@ -86,3 +86,43 @@ func TestRegistryFileList(t *testing.T) {
 	assert.Equal(t, "institution1.edu/glass/shard5-pending-restoration", files[0].Identifier)
 	assert.Equal(t, "institution1.edu/glass/shard3", files[1].Identifier)
 }
+
+func TestRegistryObjectGet(t *testing.T) {
+	exitCode, stdout, stderr := execCmd(t, "go", "run", "../main.go", "registry", "get", "object", "id=1", "--config=../testconfig.env")
+	assert.Equal(t, cmd.EXIT_OK, exitCode)
+	require.True(t, len(stdout) > 100)
+	assert.Equal(t, "", stderr)
+
+	obj := &registry.IntellectualObject{}
+	err := json.Unmarshal([]byte(stdout), obj)
+	require.Nil(t, err)
+
+	assert.Equal(t, int64(1), obj.ID)
+	assert.Equal(t, "institution1.edu/photos", obj.Identifier)
+}
+
+func TestRegistryObjectList(t *testing.T) {
+	exitCode, stdout, stderr := execCmd(t, "go", "run", "../main.go", "registry", "list", "objects", "--config=../testconfig.env")
+	assert.Equal(t, cmd.EXIT_OK, exitCode)
+	require.True(t, len(stdout) > 100)
+	assert.Equal(t, "", stderr)
+
+	resp := &ObjectsResponse{}
+	err := json.Unmarshal([]byte(stdout), resp)
+	require.Nil(t, err)
+	assert.Equal(t, 6, len(resp.Results))
+
+	exitCode, stdout, stderr = execCmd(t, "go", "run", "../main.go", "registry", "list", "objects", "storage_option=Standard", "sort=identifier__desc", "state=A", "per_page=2", "--config=../testconfig.env")
+	assert.Equal(t, cmd.EXIT_OK, exitCode)
+	fmt.Println(stdout)
+	require.True(t, len(stdout) > 100)
+	assert.Equal(t, "", stderr)
+
+	resp = &ObjectsResponse{}
+	err = json.Unmarshal([]byte(stdout), resp)
+	require.Nil(t, err)
+	objects := resp.Results
+	assert.Equal(t, 2, len(objects))
+	assert.Equal(t, "institution1.edu/photos", objects[0].Identifier)
+	assert.Equal(t, "institution1.edu/pdfs", objects[1].Identifier)
+}
