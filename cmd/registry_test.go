@@ -14,6 +14,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// Note: To run integration tests, run `scripts/test.rb integration`.
+// That starts up a local instance of registry and loads the same
+// test fixtures that we use in registry and preservation-services
+// tests.
+
 type FilesResponse struct {
 	Count    int                     `json:"count"`
 	Next     *string                 `json:"next"`
@@ -125,4 +130,47 @@ func TestRegistryObjectList(t *testing.T) {
 	assert.Equal(t, 2, len(objects))
 	assert.Equal(t, "institution1.edu/photos", objects[0].Identifier)
 	assert.Equal(t, "institution1.edu/pdfs", objects[1].Identifier)
+}
+
+func TestRegistryWorkItemGet(t *testing.T) {
+	exitCode, stdout, stderr := execCmd(t, "go", "run", "../main.go", "registry", "get", "workitem", "id=25", "--config=../testconfig.env")
+	assert.Equal(t, cmd.EXIT_OK, exitCode)
+	require.True(t, len(stdout) > 100)
+	assert.Equal(t, "", stderr)
+
+	item := &registry.WorkItem{}
+	err := json.Unmarshal([]byte(stdout), item)
+	require.Nil(t, err)
+
+	assert.Equal(t, int64(25), item.ID)
+	assert.Equal(t, "institution1.edu/photos", item.ObjectIdentifier)
+	assert.Equal(t, "Cleanup", item.Stage)
+	assert.Equal(t, "Success", item.Status)
+}
+
+func TestRegistryWorkItemList(t *testing.T) {
+	exitCode, stdout, stderr := execCmd(t, "go", "run", "../main.go", "registry", "list", "workitems", "action=Ingest", "stage=Receive", "--config=../testconfig.env")
+	assert.Equal(t, cmd.EXIT_OK, exitCode)
+	require.True(t, len(stdout) > 100)
+	assert.Equal(t, "", stderr)
+
+	resp := &WorkItemsResponse{}
+	err := json.Unmarshal([]byte(stdout), resp)
+	require.Nil(t, err)
+	assert.Equal(t, 10, len(resp.Results))
+
+	// Limit to 2. Will order by ID if we don't specify a sort param.
+	exitCode, stdout, stderr = execCmd(t, "go", "run", "../main.go", "registry", "list", "workitems", "action=Ingest", "stage=Cleanup", "per_page=2", "--config=../testconfig.env")
+	assert.Equal(t, cmd.EXIT_OK, exitCode)
+	fmt.Println(stdout)
+	require.True(t, len(stdout) > 100)
+	assert.Equal(t, "", stderr)
+
+	resp = &WorkItemsResponse{}
+	err = json.Unmarshal([]byte(stdout), resp)
+	require.Nil(t, err)
+	items := resp.Results
+	assert.Equal(t, 2, len(items))
+	assert.Equal(t, int64(22), items[0].ID)
+	assert.Equal(t, int64(23), items[1].ID)
 }
