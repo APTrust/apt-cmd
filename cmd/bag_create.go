@@ -157,8 +157,15 @@ See also:
 			profile.SetTagValue(tag.TagFile, tag.TagName, tag.GetValue())
 		}
 
+		absOutputPath, err := filepath.Abs(outputFile)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Cannot determine absolute output path.", err)
+			os.Exit(EXIT_RUNTIME_ERR)
+		}
+		logger.Debug("Absolute path of output file:", absOutputPath)
+
 		// Make sure the directory for our output target exists
-		outputDir := path.Dir(outputFile)
+		outputDir := path.Dir(absOutputPath)
 		if !util.FileExists(outputDir) {
 			logger.Debugf("Creating directory %s because it doesn't exist.", outputDir)
 			err = os.MkdirAll(outputDir, 0755)
@@ -168,16 +175,8 @@ See also:
 			}
 		}
 
-		// Make sure we can actually write to the output file
-		f, err := os.OpenFile(outputFile, os.O_RDWR, 0755)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "Cannot open output file", outputFile, "for writing:", err)
-			os.Exit(EXIT_RUNTIME_ERR)
-		}
-		f.Close()
-
 		// Create the bag
-		bagger := bagit.NewBagger(outputFile, profile, files)
+		bagger := bagit.NewBagger(absOutputPath, profile, files)
 		ok := bagger.Run()
 		if !ok {
 			for key, value := range bagger.Errors {

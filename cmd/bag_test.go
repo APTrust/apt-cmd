@@ -3,6 +3,7 @@ package cmd_test
 import (
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 	"path"
 	"testing"
@@ -13,7 +14,38 @@ import (
 )
 
 func TestBagCreate(t *testing.T) {
+	tmpFile := path.Join("..", "partnertools-testbag.tar")
+	defer os.Remove(tmpFile)
 
+	args := []string{
+		"run",
+		"../main.go",
+		"bag",
+		"create",
+		`--profile=aptrust`,
+		`--manifest-algs=md5,sha256`,
+		fmt.Sprintf(`--output-file=%s`, tmpFile),
+		`--bag-dir=profiles`,
+		`--tags=aptrust-info.txt/Title=Bag of Profiles`,
+		`--tags=aptrust-info.txt/Access=Institution`,
+		`--tags=aptrust-info.txt/Storage-Option=Standard`,
+		`--tags=bag-info.txt/Source-Organization=Faber College`,
+		`--tags=Custom-Tag=Single quoted because it {contains} $weird &characters`,
+	}
+
+	exitCode, stdout, stderr := execCmd(t, "go", args...)
+	assert.Equal(t, 0, exitCode)
+	assert.Equal(t, "", stderr)
+	assert.Contains(t, stdout, `"result": "OK"`)
+	assert.Contains(t, stdout, "partnertools-testbag.tar") // Tells us where the bag is
+
+	// Make sure that bag is valid
+	if exitCode == 0 {
+		exitCode, stdout, stderr := execCmd(t, "go", "run", "../main.go", "bag", "validate", "--profile=aptrust", tmpFile)
+		assert.Equal(t, 0, exitCode)
+		assert.Equal(t, "Bag is valid according to aptrust profile.\n", stdout)
+		assert.Equal(t, "", stderr)
+	}
 }
 
 func TestBagValidate_GoodBags(t *testing.T) {
