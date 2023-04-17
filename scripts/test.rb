@@ -23,7 +23,7 @@ class TestRunner
         # For localhost testing, use 'localhost' instead of '127.0.0.1'
         # because Minio signed URLs use hostname, not IP.
         name: "minio",
-        cmd: "#{bin}/minio server --quiet --address=localhost:9899 ~/tmp/minio",
+        cmd: "MINIO_ACCESS_KEY=minioadmin MINIO_SECRET_KEY=minioadmin #{bin}/minio server --address=localhost:9899 ~/tmp/minio",
         msg: "Minio is running on localhost:9899. User/Pwd: minioadmin/minioadmin"
       }
     ]
@@ -32,8 +32,6 @@ class TestRunner
   def clean_test_cache
     puts "Deleting test cache from last run"
     `go clean -testcache`
-    puts "Deleting old Redis data"
-    File.delete('dump.rdb') if File.exists?('dump.rdb')
   end
 
 

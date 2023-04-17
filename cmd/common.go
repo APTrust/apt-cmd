@@ -199,7 +199,7 @@ func NewS3Client(config *Config, s3Host string) *minio.Client {
 		s3Host,
 		&minio.Options{
 			Creds:  credentials.NewStaticV4(config.AWSKey, config.AWSSecret, ""),
-			Secure: true,
+			Secure: !strings.Contains(s3Host, "localhost") && !strings.Contains(s3Host, "127.0.0.1"),
 		})
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error creating S3 client:", err)

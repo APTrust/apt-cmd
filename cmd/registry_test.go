@@ -5,7 +5,6 @@ package cmd_test
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/APTrust/partner-tools/cmd"
@@ -79,7 +78,7 @@ func TestRegistryFileList(t *testing.T) {
 
 	exitCode, stdout, stderr = execCmd(t, "go", "run", "../main.go", "registry", "list", "files", "intellectual_object_id=3", "sort=identifier__desc", "state=A", "per_page=2", "--config=../testconfig.env")
 	assert.Equal(t, cmd.EXIT_OK, exitCode)
-	fmt.Println(stdout)
+	//fmt.Println(stdout)
 	require.True(t, len(stdout) > 100)
 	assert.Equal(t, "", stderr)
 
@@ -119,7 +118,7 @@ func TestRegistryObjectList(t *testing.T) {
 
 	exitCode, stdout, stderr = execCmd(t, "go", "run", "../main.go", "registry", "list", "objects", "storage_option=Standard", "sort=identifier__desc", "state=A", "per_page=2", "--config=../testconfig.env")
 	assert.Equal(t, cmd.EXIT_OK, exitCode)
-	fmt.Println(stdout)
+	//fmt.Println(stdout)
 	require.True(t, len(stdout) > 100)
 	assert.Equal(t, "", stderr)
 
@@ -162,7 +161,7 @@ func TestRegistryWorkItemList(t *testing.T) {
 	// Limit to 2. Will order by ID if we don't specify a sort param.
 	exitCode, stdout, stderr = execCmd(t, "go", "run", "../main.go", "registry", "list", "workitems", "action=Ingest", "stage=Cleanup", "per_page=2", "--config=../testconfig.env")
 	assert.Equal(t, cmd.EXIT_OK, exitCode)
-	fmt.Println(stdout)
+	//fmt.Println(stdout)
 	require.True(t, len(stdout) > 100)
 	assert.Equal(t, "", stderr)
 
