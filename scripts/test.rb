@@ -6,6 +6,7 @@
 require 'fileutils'
 require 'net/http'
 require 'optparse'
+require 'open3'
 
 class TestRunner
 
@@ -18,12 +19,18 @@ class TestRunner
     @test_name = '';
     @start_time = Time.now
     bin = self.bin_dir
+	minio_data_dir = "#{Dir.home}/tmp/minio"
+	puts minio_data_dir
+	minio = "minio"
+	if self.os_name == "windows"
+		minio = "minio.exe"
+	end
     @integration_services = [
       {
         # For localhost testing, use 'localhost' instead of '127.0.0.1'
         # because Minio signed URLs use hostname, not IP.
         name: "minio",
-        cmd: "MINIO_ACCESS_KEY=minioadmin MINIO_SECRET_KEY=minioadmin #{bin}/minio server --address=localhost:9899 ~/tmp/minio",
+        cmd: "#{bin}/#{minio} server --address=localhost:9899 #{minio_data_dir}",
         msg: "Minio is running on localhost:9899. User/Pwd: minioadmin/minioadmin"
       }
     ]
@@ -47,18 +54,35 @@ class TestRunner
     puts cmd
     pid = Process.spawn(env_hash, cmd, chdir: project_root)
     Process.wait pid
-    self.print_results
+    self.print_results($?.exitstatus)
   end
 
   def run_integration_tests(arg)
     init_for_integration
+	tags = "integration"
+	if self.os_name == "windows"
+		tags = "integration,windows"
+		puts "*** NOT testing with local Registry on Windows. ***"
+		puts "You must test Registry manually against an external server."
+	end
     puts "Starting integration tests..."
     arg = "./..." if arg.nil?
-    cmd = "go test -tags=integration #{arg}"
+    cmd = "go test -tags=#{tags} #{arg}"
     puts cmd
-    pid = Process.spawn(env_hash, cmd, chdir: project_root)
-    Process.wait pid
-    self.print_results
+	
+    #pid = Process.spawn(env_hash, cmd, chdir: project_root)
+	#puts "PID of integration tests: #{pid}"
+    #Process.wait pid
+    
+	stdout, stderr, status = Open3.capture3(cmd)
+
+	# We have to call this explicitly in Windows, or
+	# it prints nothing on failure.
+	if self.os_name == "windows" && stdout.length > 0 
+		puts stdout
+	end 
+	
+	self.print_results(status)
   end
 
 
@@ -68,8 +92,10 @@ class TestRunner
   def init_for_integration
     clean_test_cache
     make_test_dirs
-    self.registry_start
-    sleep(8)
+	if self.os_name != "windows"
+      self.registry_start
+      sleep(8)
+	end 
     @integration_services.each do |svc|
       start_service(svc)
     end
@@ -97,14 +123,17 @@ class TestRunner
       puts "Pid for #{name} is zero. Can't kill that..."
 	  return
 	end
-    os = (/darwin/ =~ RUBY_PLATFORM) ? "osx" : "linux"
-    if os == "linux"
+    if self.os_name == "linux"
       stop_service_linux(name)
       return
     end
-    puts "Stopping #{name} service (pid #{pid})"
+	signal = 'TERM'
+	if self.os_name == "windows"
+		signal = 'KILL'
+	end
+    puts "Stopping #{name} service (pid #{pid}) with signal #{signal}"
     begin
-  	  Process.kill('TERM', pid)
+  	  Process.kill(signal, pid)
   	rescue
 	  puts "Hmm... Couldn't kill #{name}."
       puts "Check system processes to see if a version "
@@ -141,9 +170,11 @@ class TestRunner
 
   def env_hash
     env = {}
-	  ENV.each{ |k,v| env[k] = v }
-	  # env['APT_ENV'] = 'integration'
-    if self.test_name != 'units'
+	ENV.each{ |k,v| env[k] = v }
+	# env['APT_ENV'] = 'integration'
+	env['MINIO_ACCESS_KEY']="minioadmin" 
+	env['MINIO_SECRET_KEY']="minioadmin"
+    if self.test_name != 'units' && self.os_name != "windows"
       env['REGISTRY_ROOT'] = ENV['REGISTRY_ROOT'] || abort("Set env var REGISTRY_ROOT")
     end
 	  env
@@ -183,8 +214,15 @@ class TestRunner
   end
 
   def bin_dir
+    File.join(project_root, "bin", self.os_name)
+  end
+  
+  def os_name
     os = (/darwin/ =~ RUBY_PLATFORM) ? "osx" : "linux"
-    File.join(project_root, "bin", os)
+	if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM)
+		os = "windows"
+	end
+	os
   end
 
   # Note: This assumes you have the registry repo source tree
@@ -251,11 +289,11 @@ class TestRunner
     @services_stopped = true
   end
 
-  def print_results
+  def print_results(exit_status)
     puts "\n"
     puts "Elapsed time: #{Time.now - @start_time} seconds"
     puts "Logs are in #{File.join(ENV['HOME'], "tmp", "logs")}"
-    if $?.success?
+    if exit_status == 0
       puts "\n\n    **** 😁 PASS 😁 **** \n\n".force_encoding('utf-8')
     else
       puts "\n\n    **** 🤬 FAIL 🤬 **** \n\n".force_encoding('utf-8')
