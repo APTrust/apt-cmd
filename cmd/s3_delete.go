@@ -47,7 +47,8 @@ successfully deleted or if the key wasn't in the bucket to begin with.
 			fmt.Fprintln(os.Stderr, "Error deleting object: ", err)
 			os.Exit(EXIT_REQUEST_ERROR)
 		}
-		fmt.Println(`{ "result": "OK" }`)
+		fmt.Printf(`{ "result": "OK", "message": "Deleted %s/%s" }`, bucket, key)
+		fmt.Println("")
 		os.Exit(EXIT_OK)
 	},
 }

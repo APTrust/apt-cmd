@@ -66,6 +66,8 @@ Download the same file and save it with a custom name on your desktop:
 			fmt.Fprintln(os.Stderr, "Error writing output file:", err)
 			os.Exit(EXIT_RUNTIME_ERR)
 		}
+		fmt.Printf(`{ "result": "OK", "message": "S3 object %s saved to file %s" }`, key, saveas)
+		fmt.Println("")
 		os.Exit(EXIT_OK)
 	},
 }
