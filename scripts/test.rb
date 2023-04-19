@@ -69,19 +69,19 @@ class TestRunner
     arg = "./..." if arg.nil?
     cmd = "go test -tags=#{tags} #{arg}"
     puts cmd
-	
+
     #pid = Process.spawn(env_hash, cmd, chdir: project_root)
 	#puts "PID of integration tests: #{pid}"
     #Process.wait pid
-    
+
 	stdout, stderr, status = Open3.capture3(cmd)
 
 	# We have to call this explicitly in Windows, or
 	# it prints nothing on failure.
-	if self.os_name == "windows" && stdout.length > 0 
+	if self.os_name == "windows" && stdout.length > 0
 		puts stdout
-	end 
-	
+	end
+
 	self.print_results(status)
   end
 
@@ -95,7 +95,7 @@ class TestRunner
 	if self.os_name != "windows"
       self.registry_start
       sleep(8)
-	end 
+	end
     @integration_services.each do |svc|
       start_service(svc)
     end
@@ -172,7 +172,7 @@ class TestRunner
     env = {}
 	ENV.each{ |k,v| env[k] = v }
 	# env['APT_ENV'] = 'integration'
-	env['MINIO_ACCESS_KEY']="minioadmin" 
+	env['MINIO_ACCESS_KEY']="minioadmin"
 	env['MINIO_SECRET_KEY']="minioadmin"
     if self.test_name != 'units' && self.os_name != "windows"
       env['REGISTRY_ROOT'] = ENV['REGISTRY_ROOT'] || abort("Set env var REGISTRY_ROOT")
@@ -214,9 +214,18 @@ class TestRunner
   end
 
   def bin_dir
-    File.join(project_root, "bin", self.os_name)
+    os = (/darwin/ =~ RUBY_PLATFORM) ? "osx" : "linux"
+    bin = File.join(project_root, "bin", os)
+    if os == "osx"
+      if (/arm64/ =~ RUBY_PLATFORM)
+        bin = File.join(bin, "arm64")
+      else
+        bin = File.join(bin, "amd64")
+      end
+    end
+    bin
   end
-  
+
   def os_name
     os = (/darwin/ =~ RUBY_PLATFORM) ? "osx" : "linux"
 	if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM)
