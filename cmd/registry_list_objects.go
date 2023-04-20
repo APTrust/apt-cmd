@@ -16,15 +16,15 @@ Examples:
 
 List 20 objects ordered by identifer:
 		
-  aptrust registry list objects sort='identifier' per_page='20'
+  apt-cmd registry list objects sort='identifier' per_page='20'
 	
 List 20 objects reverse ordered by identifer:
 		
-  aptrust registry list objects sort='identifier__desc' per_page='20'
+  apt-cmd registry list objects sort='identifier__desc' per_page='20'
 	
 List objects created after April 6, 2023
 	
-  aptrust registry list files created_at__gteq='2023-04-06'
+  apt-cmd registry list files created_at__gteq='2023-04-06'
 	
 		`,
 	Run: func(cmd *cobra.Command, args []string) {

@@ -19,8 +19,8 @@ such as 'example.edu/photos'. Ids are numeric.
 
 Examples:
 
-aptrust registry get object <object_identifier>
-aptrust registry get object <object_id>
+apt-cmd registry get object <object_identifier>
+apt-cmd registry get object <object_id>
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		client, urlValues := InitRegistryRequest(config, args)

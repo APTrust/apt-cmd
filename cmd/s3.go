@@ -13,10 +13,10 @@ var s3Cmd = &cobra.Command{
 	Long: `Upload, download, list and delete S3 objects.
 For more info, run:
 
-    aptrust s3 upload --help
-    aptrust s3 download --help
-    aptrust s3 list --help
-    aptrust s3 delete --help`,
+    apt-cmd s3 upload --help
+    apt-cmd s3 download --help
+    apt-cmd s3 list --help
+    apt-cmd s3 delete --help`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Run aptrust s3 --help for more info")
 	},

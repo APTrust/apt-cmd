@@ -19,8 +19,8 @@ such as 'example.edu/photos/data/image1.jpg'. Ids are numeric.
 
 Examples:
 
-aptrust registry get file <file_identifier>
-aptrust registry get file <file_id>
+apt-cmd registry get file <file_identifier>
+apt-cmd registry get file <file_id>
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		client, urlValues := InitRegistryRequest(config, args)

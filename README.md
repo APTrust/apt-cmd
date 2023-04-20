@@ -118,20 +118,20 @@ Currently, apt-cmd validates only tarred bags. The following commands
 validate a bag according to the APTrust BagIt profile:
 
 ```bash
-  aptrust bag validate my_bag.tar
-  aptrust bag validate -p aptrust my_bag.tar
+  apt-cmd bag validate my_bag.tar
+  apt-cmd bag validate -p aptrust my_bag.tar
 ```
 
 To validate a bag using the Beyond the Repository (BTR) profile:
 
 ```bash
-  aptrust bag validate -p btr my_bag.tar
+  apt-cmd bag validate -p btr my_bag.tar
 ```
 
 To validate a bag using the empty profile:
 
 ```bash
-  aptrust bag validate -p empty my_bag.tar
+  apt-cmd bag validate -p empty my_bag.tar
 ```
 
 The empty profile simply ensures the bag is valid according to the general
@@ -161,13 +161,13 @@ environment, or in a config file specified with the --config flag.
 Upload file photo.jpg to Amazon's S3 service:
 
 ```bash
-    s3upload --host=s3.amazonaws.com --bucket="my-bucket" photo.jpg 
+    apt-cmd s3 upload --host=s3.amazonaws.com --bucket="my-bucket" photo.jpg 
 ```
 
 Upload the same file, but call it renamed.jpg in S3:
 
 ```bash
-    s3upload --host=s3.amazonaws.com  \
+    apt-cmd s3 upload --host=s3.amazonaws.com  \
              --bucket="my-bucket" \
              --key='renamed.jpg' \
              photo.jpg
@@ -186,13 +186,13 @@ List output is in JSON format, unless you specify `--format=text`.
 List items in my_bucket with prefix "photo":
 
 ```bash
-    aptrust s3 list --host=s3.amazonaws.com --bucket=my_bucket --prefix=photo
+    apt-cmd s3 list --host=s3.amazonaws.com --bucket=my_bucket --prefix=photo
 ```
 
 List 10 items in my_bucket with prefix "photo", using plain text output:
 
 ```bash
-    aptrust s3 list --host=s3.amazonaws.com \
+    apt-cmd s3 list --host=s3.amazonaws.com \
                     --bucket=my_bucket \
                     --prefix=photo \
                     --maxitems=10 \
@@ -210,13 +210,13 @@ environment, or in a config file specified with the --config flag.
 Download a file from Amazon's S3 service into the current directory:
 
 ```bash
-    s3download --host=s3.amazonaws.com --bucket="my-bucket" --key='photo_001.jpg' 
+    apt-cmd s3 download --host=s3.amazonaws.com --bucket="my-bucket" --key='photo_001.jpg' 
 ```
 
 Download the same file and save it with a custom name on your desktop:
 
 ```bash
-    s3download --host=s3.amazonaws.com  \
+    apt-cmd s3 download --host=s3.amazonaws.com  \
                --bucket="my-bucket" \
                --key='photo_001.jpg' \
                --save-as="$HOME/Desktop/vacation.jpg"
@@ -233,7 +233,7 @@ environment, or in a config file specified with the --config flag.
 Delete object photo.jpg from my-bucket on AWS S3:
 
 ```bash	
-    s3delete --host=s3.amazonaws.com --bucket="my-bucket" --key='photo.jpg' 
+    apt-cmd s3 delete --host=s3.amazonaws.com --bucket="my-bucket" --key='photo.jpg' 
 ```
 
 Note: This returns exit status zero and `'{ "result": "OK" }'` if the key is 
@@ -262,43 +262,43 @@ These pairs **do not use the double-dash (--) prefix**.
 List recent ingests:
 
 ```bash
-  aptrust registry list workitems action='Ingest' sort='date_processed__desc'
+  apt-cmd registry list workitems action='Ingest' sort='date_processed__desc'
 ```
 
 List all work items since April 6, 2023:
 
 ```bash
-  aptrust registry list workitems date_processed__gteq='2023-04-06' sort='date_processed__desc'
+  apt-cmd registry list workitems date_processed__gteq='2023-04-06' sort='date_processed__desc'
 ```
 
 List failed work items:
 
 ```bash
-  aptrust registry list workitems status='Failed' sort='date_processed__desc'
+  apt-cmd registry list workitems status='Failed' sort='date_processed__desc'
 ```
 
 List work items pertaining to a tar file you uploaded:
 
 ```bash
-  aptrust registry list workitems name='bag-of-photos.tar'
+  apt-cmd registry list workitems name='bag-of-photos.tar'
 ```
 
 List work items pertaining to a bag with a specific etag:
 
 ```bash
-  aptrust registry list workitems etag='987654321-100'
+  apt-cmd registry list workitems etag='987654321-100'
 ```
 
 List work items pertaining to a specific intellectual object:
 
 ```bash
-  aptrust registry list workitems object_identifier='test.edu/TestBag'
+  apt-cmd registry list workitems object_identifier='test.edu/TestBag'
 ```
 
 List restorations or deletions of a specific file:
 
 ```bash
-  aptrust registry list workitems generic_file_identifier='test.edu/TestBag/data/photo1.jpg'
+  apt-cmd registry list workitems generic_file_identifier='test.edu/TestBag/data/photo1.jpg'
 ```
 
 ### Quick Reports
@@ -306,19 +306,19 @@ List restorations or deletions of a specific file:
 List all items from the past 30 days that are still in process:
 
 ```bash
-  aptrust registry list workitems --report=inprocess
+  apt-cmd registry list workitems --report=inprocess
 ```
 
 List all items from the past 30 days that failed or were cancelled:
 
 ```bash
-  aptrust registry list workitems --report=problems
+  apt-cmd registry list workitems --report=problems
 ```
 
 List all restorations from the past 30 days:
 
 ```bash
-  aptrust registry list workitems --report=restorations
+  apt-cmd registry list workitems --report=restorations
 ```
 
 When running quick reports, this tool ignores all other query params.
@@ -435,7 +435,7 @@ To retrieve a single WorkItem record from the APTrust Registry, use the
 command below. Note that id is an integer.
 
 ```bash
-  aptrust registry get workitem <id>
+  apt-cmd registry get workitem <id>
 ```
 
 ### WorkItem Get Response Format
@@ -493,19 +493,19 @@ You can list objects from the APTrust Registry, with filters.
 List 20 objects ordered by identifer:
 
 ```bash		
-  aptrust registry list objects sort='identifier' per_page='20'
+  apt-cmd registry list objects sort='identifier' per_page='20'
 ```
 	
 List 20 objects reverse ordered by identifer:
 		
 ```bash
-  aptrust registry list objects sort='identifier__desc' per_page='20'
+  apt-cmd registry list objects sort='identifier__desc' per_page='20'
 ```
 	
 List objects created after April 6, 2023
 	
 ```bash
-  aptrust registry list files created_at__gteq='2023-04-06'
+  apt-cmd registry list files created_at__gteq='2023-04-06'
 ```
 
 ### Object List Filter Options
@@ -598,8 +598,8 @@ Ids are numeric.
 ### Examples
 
 ```bash
-aptrust registry get object <object_identifier>
-aptrust registry get object <object_id>
+apt-cmd registry get object <object_identifier>
+apt-cmd registry get object <object_id>
 ```
 
 ## Get Object Response Format
@@ -649,19 +649,19 @@ the `get file` call returns more detailed info.
 List files belonging to object test.edu/my_bag, ordered by identifer:
 
 ```bash	
-  aptrust registry list files intellectual_object_identifier='test.edu/my_bag' sort='identifier'
+  apt-cmd registry list files intellectual_object_identifier='test.edu/my_bag' sort='identifier'
 ```
 
 List only the first 10 files from that same bag:
 	
 ```bash
-  aptrust registry list files intellectual_object_identifier='test.edu/my_bag' sort='identifier' per_page=10
+  apt-cmd registry list files intellectual_object_identifier='test.edu/my_bag' sort='identifier' per_page=10
 ```
 
 List files created after April 6, 2023
 
 ```bash
-  aptrust registry list files created_at__gteq='2023-04-06'
+  apt-cmd registry list files created_at__gteq='2023-04-06'
 ```
 
 ### File List Filter Options
@@ -744,8 +744,8 @@ of the checksums and PREMIS events associated with the file.
 ### Examples
 
 ```bash
-aptrust registry get file <file_identifier>
-aptrust registry get file <file_id>
+apt-cmd registry get file <file_identifier>
+apt-cmd registry get file <file_id>
 ```
 
 ## Get File Response Format

@@ -27,11 +27,11 @@ Examples:
 
 List items in my_bucket with prefix "photo":
 
-    aptrust s3 list --host=s3.amazonaws.com --bucket=my_bucket --prefix=photo
+    apt-cmd s3 list --host=s3.amazonaws.com --bucket=my_bucket --prefix=photo
 
 List 10 items in my_bucket with prefix "photo", using plain text output:
 
-    aptrust s3 list --host=s3.amazonaws.com \
+    apt-cmd s3 list --host=s3.amazonaws.com \
                     --bucket=my_bucket \
                     --prefix=photo \
                     --maxitems=10 \

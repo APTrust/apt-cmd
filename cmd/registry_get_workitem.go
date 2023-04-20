@@ -17,7 +17,7 @@ var workitemCmd = &cobra.Command{
 to check on the status of ingests, restorations and deletions. Id is a
 number.
 
-aptrust registry get workitem <id>`,
+apt-cmd registry get workitem <id>`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client, urlValues := InitRegistryRequest(config, args)
 		var resp *network.RegistryResponse

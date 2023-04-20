@@ -53,7 +53,7 @@ This bag will include md5 and sha256 manifests and tag manifests. It will
 also include the specified tags in the bag-info.txt and aptrust-info.txt
 tag files.
 
-  aptrust bag create \
+apt-cmd bag create \
     --profile=aptrust \
     --manifest-algs='md5,sha256' \
     --output-file='/home/josie/bags/photos.tar' \
@@ -83,7 +83,7 @@ Limitations:
 
 See also:
 
-  aptrust bag validate --help
+apt-cmd bag validate --help
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(manifestAlgs) == 0 {

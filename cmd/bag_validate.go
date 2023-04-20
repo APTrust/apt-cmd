@@ -20,16 +20,16 @@ var validateCmd = &cobra.Command{
 Currently, this supports only tarred bags. The following commands
 validate a bag according to the APTrust BagIt profile:
 
-  aptrust bag validate my_bag.tar
-  aptrust bag validate -p aptrust my_bag.tar
+  apt-cmd bag validate my_bag.tar
+  apt-cmd bag validate -p aptrust my_bag.tar
 
 To validate a bag using the Beyond the Repository (BTR) profile:
 
-  aptrust bag validate -p btr my_bag.tar
+  apt-cmd bag validate -p btr my_bag.tar
 
 To validate a bag using the empty profile:
 
-  aptrust bag validate -p empty my_bag.tar
+  apt-cmd bag validate -p empty my_bag.tar
 
 The empty profile simply ensures the bag is valid according to the general
 BagIt specification. 
