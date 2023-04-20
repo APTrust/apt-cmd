@@ -33,6 +33,11 @@ To validate a bag using the empty profile:
 
 The empty profile simply ensures the bag is valid according to the general
 BagIt specification. 
+
+Limitations:
+
+The validator only works with tarred bags and will not validate fetch.txt files.
+
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		profileName := cmd.Flag("profile").Value.String()

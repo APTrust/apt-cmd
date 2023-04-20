@@ -17,9 +17,11 @@ import (
 var s3ListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List items in an S3 bucket",
-	Long: `Download a file from any S3 storage. For this to work,
-you will need to have APTRUST_AWS_KEY and APTRUST_AWS_SECRET set in your 
-environment, or in a config file specified with the --config flag.
+	Long: `You can list files from any S3-compatible service. For this to 
+work, you will need to have APTRUST_AWS_KEY and APTRUST_AWS_SECRET set in 
+your environment, or in a config file specified with the --config flag.
+
+List output is in JSON format, unless you specify --format=text.
 	
 Examples:
 
