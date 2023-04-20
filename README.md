@@ -18,6 +18,16 @@ For bag creating and validation, the current release supports tarred bags
 only. Though access to the APTrust registry is limited to APTrust depositors, 
 anyone can use apt-cmd's bagging and S3 features.
 
+# Downloads
+
+| Platform | Architecture | Download URL |
+| -------- | ------------ | ------------ |
+| Windows | Intel 64-bit | Coming soon... |
+| Mac  | Intel 64-bit | Coming soon... |
+| Mac  | Apple Silicon (M series) | Coming soon... |
+| Linux | Intel 64-bit | Coming soon... |
+
+
 ## Help and Troubleshooting
 
 You can get help for any apt-cmd command using the `--help` flag. 
@@ -58,8 +68,10 @@ omit the file name, it defaults to bag-info.txt. For example, the following
 two tags will both be written into the Source-Organization tag in 
 bag-info.txt:
 
+```
   --tags="bag-info.txt/Source-Organization=Faber College" 
   --tags="Source-Organization=Faber College"
+```
 
 Note that tag values are quoted in their entirety, both the name and
 the value.
