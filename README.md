@@ -30,3 +30,11 @@ anyone can use apt-cmd's bagging and S3 features.
 # Documentation
 
 You'll find extensive documentation and usage examples at https://aptrust.github.io/userguide/partner_tools/
+
+# Testing
+
+Unit tests: `./scripts/test.rb units`
+
+Integration tests: `./scripts/test.rb integration`
+
+Note that when running integration tests, Registry tests do not run on Windows.
