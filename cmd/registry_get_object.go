@@ -21,6 +21,11 @@ Examples:
 
 apt-cmd registry get object <object_identifier>
 apt-cmd registry get object <object_id>
+
+Full online documentation:
+
+https://aptrust.github.io/userguide/partner_tools/
+
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		client, urlValues := InitRegistryRequest(config, args)

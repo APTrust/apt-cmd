@@ -23,15 +23,19 @@ Examples:
 	
 Upload file photo.jpg to Amazon's S3 service:
 	
-    s3upload --host=s3.amazonaws.com --bucket="my-bucket" photo.jpg 
+    apt-cmd s3 upload --host=s3.amazonaws.com --bucket="my-bucket" photo.jpg 
 	
 Upload the same file, but call it renamed.jpg in S3:
 	
-    s3upload --host=s3.amazonaws.com  \
+    apt-cmd s3 upload --host=s3.amazonaws.com  \
              --bucket="my-bucket" \
              --key='renamed.jpg' \
              photo.jpg
-			 
+
+Full online documentation:
+
+  https://aptrust.github.io/userguide/partner_tools/
+						  
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.ValidateAWSCredentials()

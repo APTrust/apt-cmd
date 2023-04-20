@@ -16,7 +16,13 @@ For more info, run:
     apt-cmd s3 upload --help
     apt-cmd s3 download --help
     apt-cmd s3 list --help
-    apt-cmd s3 delete --help`,
+    apt-cmd s3 delete --help
+
+Full online documentation:
+
+  https://aptrust.github.io/userguide/partner_tools/
+	
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Run aptrust s3 --help for more info")
 	},

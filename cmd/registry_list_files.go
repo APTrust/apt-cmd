@@ -28,6 +28,10 @@ List files created after April 6, 2023
 
   apt-cmd registry list files created_at__gteq='2023-04-06'
 
+Full online documentation:
+
+  https://aptrust.github.io/userguide/partner_tools/
+  
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client, urlValues := InitRegistryRequest(config, args)

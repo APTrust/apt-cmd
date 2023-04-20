@@ -23,15 +23,19 @@ Examples:
 
 Download a file from Amazon's S3 service into the current directory:
 
-    s3download --host=s3.amazonaws.com --bucket="my-bucket" --key='photo_001.jpg' 
+    apt-cmd s3 download --host=s3.amazonaws.com --bucket="my-bucket" --key='photo_001.jpg' 
 
 Download the same file and save it with a custom name on your desktop:
 
-    s3download --host=s3.amazonaws.com  \
+    apt-cmd s3 download --host=s3.amazonaws.com  \
                --bucket="my-bucket" \
                --key='photo_001.jpg' \
                --save-as="$HOME/Desktop/vacation.jpg"
-		   
+
+Full online documentation:
+
+  https://aptrust.github.io/userguide/partner_tools/
+							  
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.ValidateAWSCredentials()

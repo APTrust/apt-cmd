@@ -84,6 +84,10 @@ Limitations:
 See also:
 
 apt-cmd bag validate --help
+
+Full online documentation:
+
+https://aptrust.github.io/userguide/partner_tools/
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(manifestAlgs) == 0 {

@@ -19,48 +19,52 @@ Examples:
 
 List recent ingests:
 
-  aptrust registry list workitems action='Ingest' sort='date_processed__desc'
+  apt-cmd registry list workitems action='Ingest' sort='date_processed__desc'
 
 List all work items since April 6, 2023:
 
-  aptrust registry list workitems date_processed__gteq='2023-04-06' sort='date_processed__desc'
+  apt-cmd registry list workitems date_processed__gteq='2023-04-06' sort='date_processed__desc'
 
 List failed work items:
 
-  aptrust registry list workitems status='Failed' sort='date_processed__desc'
+  apt-cmd registry list workitems status='Failed' sort='date_processed__desc'
 
 List work items pertaining to a tar file you uploaded:
 
-  aptrust registry list workitems name='bag-of-photos.tar'
+  apt-cmd registry list workitems name='bag-of-photos.tar'
 
 List work items pertaining to a bag with a specific etag:
 
-  aptrust registry list workitems etag='987654321-100'
+  apt-cmd registry list workitems etag='987654321-100'
 
 List work items pertaining to a specific intellectual object:
 
-  aptrust registry list workitems object_identifier='test.edu/TestBag'
+  apt-cmd registry list workitems object_identifier='test.edu/TestBag'
 
 List restorations or deletions of a specific file:
 
-  aptrust registry list workitems generic_file_identifier='test.edu/TestBag/data/photo1.jpg'
+  apt-cmd registry list workitems generic_file_identifier='test.edu/TestBag/data/photo1.jpg'
 
 
 Quick Reports:
 
 List all items from the past 30 days that are still in process:
 
-  aptrust registry list workitems --report=inprocess
+  apt-cmd registry list workitems --report=inprocess
 
 List all items from the past 30 days that failed or were cancelled:
 
-  aptrust registry list workitems --report=problems
+  apt-cmd registry list workitems --report=problems
 
 List all restorations from the past 30 days:
 
-  aptrust registry list workitems --report=restorations
+  apt-cmd registry list workitems --report=restorations
 
 When running quick reports, this tool ignores all other query params.
+
+Full online documentation:
+
+  https://aptrust.github.io/userguide/partner_tools/
 
 	`,
 	Run: func(cmd *cobra.Command, args []string) {

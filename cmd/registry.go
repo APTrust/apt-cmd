@@ -10,7 +10,12 @@ import (
 var registryCmd = &cobra.Command{
 	Use:   "registry",
 	Short: "Get files, objects, and work items from the APTrust Registry",
-	Long:  `Get files, objects, and work items from the APTrust Registry`,
+	Long: `Get files, objects, and work items from the APTrust Registry.
+	Full online documentation:
+
+      https://aptrust.github.io/userguide/partner_tools/
+		
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("See subcommands")
 	},

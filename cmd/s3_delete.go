@@ -24,10 +24,15 @@ Example:
 	
 Delete object photo.jpg from my-bucket on AWS S3:
 	
-    s3delete --host=s3.amazonaws.com --bucket="my-bucket" --key='photo.jpg' 
+    apt-cmd s3 delete --host=s3.amazonaws.com --bucket="my-bucket" --key='photo.jpg' 
 
 Note: This returns exit status zero and '{ "result": "OK" }' if the key is 
 successfully deleted or if the key wasn't in the bucket to begin with.
+
+Full online documentation:
+
+  https://aptrust.github.io/userguide/partner_tools/
+
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.ValidateAWSCredentials()

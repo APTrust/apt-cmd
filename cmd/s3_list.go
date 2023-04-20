@@ -37,6 +37,10 @@ List 10 items in my_bucket with prefix "photo", using plain text output:
                     --maxitems=10 \
                     --format=text
 
+Full online documentation:
+
+  https://aptrust.github.io/userguide/partner_tools/
+					
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		bucket := cmd.Flags().Lookup("bucket").Value.String()
