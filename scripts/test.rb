@@ -19,12 +19,12 @@ class TestRunner
     @test_name = '';
     @start_time = Time.now
     bin = self.bin_dir
-	minio_data_dir = "#{Dir.home}/tmp/minio"
-	puts minio_data_dir
-	minio = "minio"
-	if self.os_name == "windows"
-		minio = "minio.exe"
-	end
+	  minio_data_dir = "#{Dir.home}/tmp/minio"
+	  puts minio_data_dir
+	  minio = "minio"
+	  if self.os_name == "windows"
+	    minio = "minio.exe"
+	  end
     @integration_services = [
       {
         # For localhost testing, use 'localhost' instead of '127.0.0.1'
@@ -59,30 +59,29 @@ class TestRunner
 
   def run_integration_tests(arg)
     init_for_integration
-	tags = "integration"
-	if self.os_name == "windows"
-		tags = "integration,windows"
-		puts "*** NOT testing with local Registry on Windows. ***"
-		puts "You must test Registry manually against an external server."
-	end
+	  tags = "integration"
+	  if self.os_name == "windows"
+	    tags = "integration,windows"
+	    puts "*** NOT testing with local Registry on Windows. ***"
+	    puts "You must test Registry manually against an external server."
+	  end
     puts "Starting integration tests..."
     arg = "./..." if arg.nil?
     cmd = "go test -tags=#{tags} #{arg}"
     puts cmd
 
     #pid = Process.spawn(env_hash, cmd, chdir: project_root)
-	#puts "PID of integration tests: #{pid}"
+  	#puts "PID of integration tests: #{pid}"
     #Process.wait pid
 
-	stdout, stderr, status = Open3.capture3(cmd)
+	  stdout, stderr, status = Open3.capture3(cmd)
 
-	# We have to call this explicitly in Windows, or
-	# it prints nothing on failure.
-	if self.os_name == "windows" && stdout.length > 0
-		puts stdout
-	end
-
-	self.print_results(status)
+	  # We have to call this explicitly in Windows, or
+	  # it prints nothing on failure.
+	  if self.os_name == "windows" && stdout.length > 0
+	    puts stdout
+	  end
+  	self.print_results(status)
   end
 
 
@@ -92,10 +91,10 @@ class TestRunner
   def init_for_integration
     clean_test_cache
     make_test_dirs
-	if self.os_name != "windows"
+	  if self.os_name != "windows"
       self.registry_start
       sleep(8)
-	end
+	  end
     @integration_services.each do |svc|
       start_service(svc)
     end
@@ -119,26 +118,27 @@ class TestRunner
   end
 
   def stop_service(name, pid)
-	if pid.nil? || pid == 0
+	  if pid.nil? || pid == 0
       puts "Pid for #{name} is zero. Can't kill that..."
-	  return
-	end
+	    return
+	  end
     if self.os_name == "linux"
       stop_service_linux(name)
       return
     end
-	signal = 'TERM'
-	if self.os_name == "windows"
-		signal = 'KILL'
-	end
+	  signal = 'TERM'
+	  if self.os_name == "windows"
+	    signal = 'KILL'
+	  end
+
     puts "Stopping #{name} service (pid #{pid}) with signal #{signal}"
     begin
   	  Process.kill(signal, pid)
   	rescue
-	  puts "Hmm... Couldn't kill #{name}."
+	    puts "Hmm... Couldn't kill #{name}."
       puts "Check system processes to see if a version "
       puts "of that process is lingering from a previous test run."
-	end
+	  end
   end
 
   # This method exists because Process.spawn on Linux returns the
@@ -170,10 +170,10 @@ class TestRunner
 
   def env_hash
     env = {}
-	ENV.each{ |k,v| env[k] = v }
-	# env['APT_ENV'] = 'integration'
-	env['MINIO_ACCESS_KEY']="minioadmin"
-	env['MINIO_SECRET_KEY']="minioadmin"
+	  ENV.each{ |k,v| env[k] = v }
+	  # env['APT_ENV'] = 'integration'
+	  env['MINIO_ACCESS_KEY']="minioadmin"
+	  env['MINIO_SECRET_KEY']="minioadmin"
     if self.test_name != 'units' && self.os_name != "windows"
       env['REGISTRY_ROOT'] = ENV['REGISTRY_ROOT'] || abort("Set env var REGISTRY_ROOT")
     end
@@ -228,10 +228,10 @@ class TestRunner
 
   def os_name
     os = (/darwin/ =~ RUBY_PLATFORM) ? "osx" : "linux"
-	if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM)
-		os = "windows"
-	end
-	os
+  	if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM)
+	    os = "windows"
+	  end
+	  os
   end
 
   # Note: This assumes you have the registry repo source tree
@@ -239,20 +239,20 @@ class TestRunner
   def registry_start
   	if !@pids['registry']
       registry_load_fixtures
-	    # Force copy of env to integration so that registry fixtures load.
+  	  # Force copy of env to integration so that registry fixtures load.
 	    env = {}.merge(env_hash)
 	    env['APT_ENV'] = 'integration'
-      # Important! Adding -tags=test here turns on the special
-      # testing endpoints prepare_file_delete and prepare_object_delete,
-      # which are disabled in all non-test environments.
-	    cmd = 'go run -tags=test registry.go'
+        # Important! Adding -tags=test here turns on the special
+        # testing endpoints prepare_file_delete and prepare_object_delete,
+        # which are disabled in all non-test environments.
+  	  cmd = 'go run -tags=test registry.go'
 	    log_file = log_file_path('registry')
 	    registry_pid = Process.spawn(env,
-								   cmd,
-								   chdir: env['REGISTRY_ROOT'],
-								   out: [log_file, 'w'],
-								   err: [log_file, 'w'])
-	    Process.detach registry_pid
+  								   cmd,
+	  							   chdir: env['REGISTRY_ROOT'],
+		  						   out: [log_file, 'w'],
+			  					   err: [log_file, 'w'])
+  	  Process.detach registry_pid
       sleep 3
 
       # go run compiles an executable, puts it in a temp directory, and
@@ -313,7 +313,7 @@ class TestRunner
   def print_help
     puts "\n"
     puts "APTrust partner tools tests\n\n"
-	  puts "Usage: "
+  	puts "Usage: "
     puts "  test.rb units                   # Run unit tests"
     puts "  test.rb integration             # Run integration tests"
     puts "\n"
