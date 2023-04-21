@@ -16,7 +16,16 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "aptrust",
 	Short: "APTrust partner tools.",
-	Long:  `APTrust partner tools to validate bags and query the Registry.`,
+	Long: `APTrust partner tools.
+
+    * Create and validate bags.
+    * Upload to and download from S3.
+    * Report on WorkItems, objects and files in the registry.
+
+	Source: https://github.com/APTrust/partner-tools
+	Docs: https://aptrust.github.io/userguide/partner_tools/
+
+`,
 }
 
 var config *Config
