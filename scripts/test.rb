@@ -214,9 +214,8 @@ class TestRunner
   end
 
   def bin_dir
-    os = (/darwin/ =~ RUBY_PLATFORM) ? "osx" : "linux"
-    bin = File.join(project_root, "bin", os)
-    if os == "osx"
+    bin = File.join(project_root, "bin", self.os_name)
+    if self.os_name == "osx"
       if (/arm64/ =~ RUBY_PLATFORM)
         bin = File.join(bin, "arm64")
       else
