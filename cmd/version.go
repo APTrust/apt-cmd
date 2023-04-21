@@ -17,9 +17,9 @@ var versionCmd = &cobra.Command{
 	Short: "Print version info and exit",
 	Long:  `Print version info and exit`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("apt-cmd (APTrust partner tools)")
-		fmt.Printf("Version %s on %s %s\n", Version, runtime.GOOS, runtime.GOARCH)
-		fmt.Printf("Build %s on %s\n", CommitId, BuildDate)
+		fmt.Println("  apt-cmd (APTrust partner tools)")
+		fmt.Printf("  Version %s on %s %s\n", Version, runtime.GOOS, runtime.GOARCH)
+		fmt.Printf("  Build %s on %s\n", CommitId, BuildDate)
 		os.Exit(EXIT_OK)
 	},
 }

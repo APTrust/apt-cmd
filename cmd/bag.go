@@ -12,7 +12,7 @@ var bagCmd = &cobra.Command{
 	Short: "Create and validate BagIt bags.",
 	Long:  `Create and validate BagIt bags.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("See subcommands")
+		fmt.Println("Create and validate bags. See subcommands for more info.")
 	},
 }
 

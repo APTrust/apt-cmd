@@ -17,7 +17,7 @@ var registryCmd = &cobra.Command{
 		
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("See subcommands")
+		fmt.Println("Retrieve data from the APTrust registry. See subcommands for more info.")
 	},
 }
 

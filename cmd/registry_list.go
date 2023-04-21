@@ -16,7 +16,7 @@ var listCmd = &cobra.Command{
 	  https://aptrust.github.io/userguide/partner_tools/		
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("See subcomands.")
+		fmt.Println("List metadata records from the APTrust registry. See subcommands for more info.")
 	},
 }
 

@@ -24,7 +24,7 @@ Full online documentation:
 	
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Run aptrust s3 --help for more info")
+		fmt.Println("Manage files in S3. See subcommands for more info.")
 	},
 }
 
