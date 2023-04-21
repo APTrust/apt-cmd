@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/APTrust/partner-tools/cmd"
+	"github.com/APTrust/apt-cmd/cmd"
 	"github.com/APTrust/preservation-services/models/registry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

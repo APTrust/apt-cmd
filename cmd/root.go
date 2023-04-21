@@ -22,7 +22,7 @@ var rootCmd = &cobra.Command{
     * Upload to and download from S3.
     * Report on WorkItems, objects and files in the registry.
 
-	Source: https://github.com/APTrust/partner-tools
+	Source: https://github.com/APTrust/apt-cmd
 	Docs: https://aptrust.github.io/userguide/partner_tools/
 
 `,

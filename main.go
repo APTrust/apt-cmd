@@ -1,6 +1,6 @@
 package main
 
-import "github.com/APTrust/partner-tools/cmd"
+import "github.com/APTrust/apt-cmd/cmd"
 
 func main() {
 	cmd.Execute()

@@ -3,7 +3,7 @@ package cmd_test
 import (
 	"testing"
 
-	"github.com/APTrust/partner-tools/cmd"
+	"github.com/APTrust/apt-cmd/cmd"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

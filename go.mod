@@ -1,4 +1,4 @@
-module github.com/APTrust/partner-tools
+module github.com/APTrust/apt-cmd
 
 go 1.20
 

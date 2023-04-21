@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -12,7 +9,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// s3deleteCmd represents the s3delete command
 var s3deleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete an object from S3 storage",
