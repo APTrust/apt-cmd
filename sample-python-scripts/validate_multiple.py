@@ -3,7 +3,7 @@ import subprocess
 import sys
 
 ###############################################################################################################################
-#                                               FILL IN SPECIFIC VALIDATE INFO BELOW                                            #
+#                                               FILL IN SPECIFIC VALIDATE INFO BELOW                                          #
 
 # THIS IS THE PATH TO WHERE THE PARTNER TOOLS apt-cmd EXECUTABLE IS
 path_to_where_apt_cmd_is = ""
