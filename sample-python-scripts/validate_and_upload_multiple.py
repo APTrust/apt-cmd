@@ -3,7 +3,7 @@ import subprocess
 import sys
 
 ###############################################################################################################################
-#                                               FILL IN SPECIFIC UPLOAD AND VALIDATE INFO BELOW                                            #
+#                                               FILL IN SPECIFIC UPLOAD AND VALIDATE INFO BELOW                               #
 
 # NAME OF RECEIVING BUCKET
 bucket_name = ""
