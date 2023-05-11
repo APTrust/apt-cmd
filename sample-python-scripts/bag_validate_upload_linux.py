@@ -52,16 +52,24 @@ for bag in jobs:
 
     create_command = "apt-cmd bag create" + profile_full + manifest_algs + output_file + bag_name + ".tar" + bag_dir + source_organization + title + access + storage_option
     create = subprocess.run(create_command, shell=True, capture_output=True, text=True)
-    if create.returncode: print("ERROR CREATING: {}".format(bag_name))
+    if create.returncode:
+        print("ERROR CREATING: {}".format(bag_name))
+    else:
+        print("Bagged: {}".format(bag_name))
 
     validate_command = "apt-cmd bag validate -p " + profile + " " + output_dir + "/" + bag_name + ".tar"
     validate = subprocess.run(validate_command, shell=True, capture_output=True, text=True)
     if validate.returncode: 
         print("ERROR VALIDATING: {}".format(bag_name))
         continue
+    else:
+        print("Validated: {}".format(bag_name))
     
     upload_command = 'apt-cmd s3 upload --host=s3.amazonaws.com --bucket="' + str(bucket_name) + '" ' + output_dir + "/" + bag_name + ".tar"
     upload = subprocess.run(upload_command, shell=True, capture_output=True, text=True)
-    if upload.returncode: print("ERROR UPLOADING: {}".format(bag_name))
+    if upload.returncode:
+        print("ERROR UPLOADING: {}".format(bag_name))
+    else:
+        print("Uploaded: {}".format(bag_name))
 
     print("Bagged, Validated, Uploaded: {}".format(bag_name))

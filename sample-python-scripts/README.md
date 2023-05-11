@@ -2,7 +2,7 @@
 
 This folder contains several examples of python3 scripts that utilize the apt-cmd command line tool. Examples are present for bagging multiple items, validating multiple bags, uploading multiple bags, validating and uploading multiple bags in the same script.
 
-## bag_multiple.py
+## bag_(linux/windows).py
 
 Takes in:
 * Path to where the command line tool is: ```path_to_where_apt_cmd_is```
@@ -17,7 +17,7 @@ Takes in:
 
 Upon running this script, any folder within the chosen directory will be bagged and placed in the directory specified.
 
-## validate_multiple.py
+## validate_(linux/windows).py
 
 Takes in:
 * Path to where the command line tool is: ```path_to_where_apt_cmd_is```
@@ -26,7 +26,7 @@ Takes in:
 
 Upon running this script, any file ending in .tar within the chosen directory will be validated using the profile specified.
 
-## upload_multiple.py
+## upload_(linux/windows).py
 
 Takes in:
 * Name of the S3 receiving bucket to upload to: ```bucket_name```
@@ -37,7 +37,7 @@ Takes in:
 
 Upon running this script, any file ending in .tar within the chosen directory will be uploaded to the specified bucket using the credentials specified.
 
-## validate_and_upload_multiple.py
+## bag_validate_upload_(linux/windows).py
 
 Takes in:
 * Name of the S3 receiving bucket to upload to: ```bucket_name```

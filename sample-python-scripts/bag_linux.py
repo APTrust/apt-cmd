@@ -43,6 +43,7 @@ for bag in jobs:
 
     create_command = "apt-cmd bag create" + profile_full + manifest_algs + output_file + bag_name + ".tar" + bag_dir + source_organization + title + access + storage_option
     create = subprocess.run(create_command, shell=True, capture_output=True, text=True)
-    if create.returncode: print("ERROR CREATING: {}".format(bag_name))
-
-    print("Bagged: {}".format(bag_name))
+    if create.returncode:
+        print("ERROR CREATING: {}".format(bag_name))
+    else:
+        print("Bagged: {}".format(bag_name))
