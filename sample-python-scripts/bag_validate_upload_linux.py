@@ -6,30 +6,29 @@ import sys
 #                                               FILL IN SPECIFIC UPLOAD AND VALIDATE INFO BELOW                                            #
 
 # NAME OF RECEIVING BUCKET
-bucket_name = "aptrust.receiving.test.acr7d.edu"
+bucket_name = ""
 
 # AWS KEYS
 aws_access_key = ""
 aws_secret_key = ""
 
-output_dir = "/home/emory/aptrust/testing_files/testing_output"
+output_dir = ""
 
 # BAG PROFILE TO USE WHEN CREATING
-profile = "aptrust"
+profile = ""
 
 # WHAT MAINIFEST AND TAG MANIFESTS TO INCLUDE: i.e. 'md5,sha256'
-manifest_algs = "md5,sha256"
+manifest_algs = ""
 
 # WHAT ORGANIZATION TO PUT IN THE BAG INFO
-source_organization = "College"
+source_organization = ""
 
 # BAG STORAGE TYPE: i.e. 'Standard'
-storage_option = "Standard"
+storage_option = ""
 
 jobs = [
-        { "source_dir":"/home/emory/aptrust/testing_files/testing_input/test_bag_1", "title": "Bag 1", "access": "Institution" },
-        { "source_dir":"/home/emory/aptrust/testing_files/testing_input/test_bag_2", "title": "Bag 2", "access": "Consortia" },
-        { "source_dir":"/home/emory/aptrust/testing_files/testing_input/test_bag_3", "title": "Bag 2", "access": "Consortia" }
+        { "source_dir":"", "title": "", "access": "" },
+        { "source_dir":"", "title": "", "access": "" }
         ]
 
 ###############################################################################################################################

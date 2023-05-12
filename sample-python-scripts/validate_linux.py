@@ -6,11 +6,12 @@ import sys
 #                                               FILL IN SPECIFIC VALIDATE INFO BELOW                                          #
 
 # BAG PROFILE TO VALIDATE WITH
-profile = "aptrust"
+profile = ""
 
 # LIST PATH OF BAGS TO BE VALIDATED
 bags = [
-        { "bag_path":"/home/emory/aptrust/testing_files/testing_output/test_bag_1.tar"}
+        { "bag_path":"/path/to/bag.tar"},
+        { "bag_path":"/path/to/bag.tar"}
 ]
 
 ###############################################################################################################################

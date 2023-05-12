@@ -6,7 +6,7 @@ import sys
 #                                               FILL IN SPECIFIC UPLOAD INFO BELOW                                            #
 
 # NAME OF RECEIVING BUCKET
-bucket_name = "aptrust.receiving.test.acr7d.edu"
+bucket_name = ""
 
 # AWS KEYS
 aws_access_key = ""
@@ -14,7 +14,7 @@ aws_secret_key = ""
 
 # LIST PATH OF BAGS TO BE UPLOADED
 bags = [
-        { "bag_path":"/home/emory/aptrust/testing_files/testing_output/test_bag_2.tar"}
+        { "bag_path":"/path/to/bag.tar"}
 ]
 
 ###############################################################################################################################
