@@ -7,7 +7,7 @@ This folder contains several examples of python3 scripts that utilize the apt-cm
 1. Fill in user specific info in between ### blocks of chosen script
     * I.e. bucket_name, aws_access_key, etc.
 2. Run the program using python
-    * I.e. ```python3 bag_validate_upload_linux.py``` or ```python bag_validate_upload.py```
+    * I.e. ```python3 bag_validate_upload_linux.py``` or ```python bag_validate_upload_windows.py```
 
 ## Prerequisite for scripts
 
