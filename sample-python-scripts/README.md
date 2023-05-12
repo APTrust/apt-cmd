@@ -18,7 +18,7 @@ To run any of theses scripts, ```apt-cmd``` must be added to your systems path s
 6. Add this line to the file ```export PATH="${HOME}/bin:${PATH}"```
 7. Restart your Terminal
 
-You can verify the binary is on the path by running ```command -v binary```
+You can verify the binary is on the path by running ```command -v apt-cmd```
 
 ### Windows
 
@@ -35,30 +35,37 @@ You can verify the binary is on the path by running ```command -v binary```
 
 You can verify the binary is on the path by running ```where.exe apt-cmd.exe```
 
-## bag_(linux/windows).py
+# Script Specific Information
+
+### bag_(linux/windows).py
 
 Takes in:
 * Location to place the created bags: ```output_dir```
 * Bag profile to use: ```profile```
+    * Allowed Values: aptrust, btr, empty
 * What manifests and tag manifests to use: ```manifest_algs```
+    * Specify one, or use comma-separated list for multiple. Supported algorithms: md5, sha1, sha256, sha512. Default is sha256.
 * What organization belongs in bag info: ```source_organization```
 * Storage type of the bag: ```storage_option```
+    * Allowed Values: Standard, Glacier-OH, Glacier-OR, Glacier-VA, Glacier-Deep-OH, Glacier-Deep-OR, Glacier-Deep-VA
 * Bag specific details, in the form of a python dictionary with structure:  ```jobs = [{ "source_dir":"", "title": "", "access": "" }]```
     * ```source_dir``` - path to directory to be bagged
     * ```title``` - title of bag to create
     * ```access``` - access type of the bag
+        * Allowed Values: Restricted, Institution, Consortia
 
 Upon running this script the bags listed in the ```jobs``` directory will be created and placed in ```output_dir```.
 
-## validate_(linux/windows).py
+### validate_(linux/windows).py
 
 Takes in:
 * Bag profile to use: ```profile```
+    * Allowed Values: aptrust, btr, empty
 * Bags to validate in the form of a python dictionary: ```bags = [{ "bag_path":"/path/to/bag.tar"}]```
 
 Upon running this script files in the ```bags``` directory will be validated using the ```profile``` specified.
 
-## upload_(linux/windows).py
+### upload_(linux/windows).py
 
 Takes in:
 * Name of the S3 receiving bucket to upload to: ```bucket_name```
@@ -68,7 +75,7 @@ Takes in:
 
 Upon running this script files in the ```bags``` directory will be uploaded to the specified bucket using the credentials specified.
 
-## bag_validate_upload_(linux/windows).py
+### bag_validate_upload_(linux/windows).py
 
 Takes in:
 * Name of the S3 receiving bucket to upload to: ```bucket_name```
@@ -76,12 +83,16 @@ Takes in:
 * AWS secret key of the user: ```aws_secret_key```
 * Location to place the created bags: ```output_dir```
 * Bag profile to use: ```profile```
+    * Allowed Values: aptrust, btr, empty
 * What manifests and tag manifests to use: ```manifest_algs```
+    * Specify one, or use comma-separated list for multiple. Supported algorithms: md5, sha1, sha256, sha512. Default is sha256.
 * What organization belongs in bag info: ```source_organization```
 * Storage type of the bag: ```storage_option```
+    * Allowed Values: Standard, Glacier-OH, Glacier-OR, Glacier-VA, Glacier-Deep-OH, Glacier-Deep-OR, Glacier-Deep-VA
 * Bag specific details, in the form of a python dictionary with structure:  ```jobs = [{ "source_dir":"", "title": "", "access": "" }]```
     * ```source_dir``` - path to directory to be bagged
     * ```title``` - title of bag to create
     * ```access``` - access type of the bag
+        * Allowed Values: Restricted, Institution, Consortia
 
 This script will create bags specified in the ```jobs``` dictionary and place them in ```output_dir```. It then validates these bags, and if they are valid it will upload them to the specified bucket.

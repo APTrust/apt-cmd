@@ -31,6 +31,7 @@ jobs = [
         { "source_dir":"", "title": "", "access": "" }
 ]
 
+
 ###############################################################################################################################
 
 profile_full = " --profile=" + profile
@@ -50,14 +51,14 @@ for bag in jobs:
     bag_name = bag["source_dir"][-index_slash::]
 
     create_command = "apt-cmd bag create" + profile_full + manifest_algs + output_file + bag_name + ".tar" + bag_dir + source_organization + title + access + storage_option
-    create = subprocess.call(create_command, shell=True, capture_output=True, text=True)
+    create = subprocess.call(create_command, shell=True)
     if create:
         print("ERROR CREATING: {}".format(bag_name))
     else:
         print("Bagged: {}".format(bag_name))
 
     validate_command = "apt-cmd bag validate -p " + profile + " " + output_dir + "/" + bag_name + ".tar"
-    validate = subprocess.call(validate_command, shell=True, capture_output=True, text=True)
+    validate = subprocess.call(validate_command, shell=True)
     if validate: 
         print("ERROR VALIDATING: {}".format(bag_name))
         continue
@@ -65,7 +66,7 @@ for bag in jobs:
         print("Validated: {}".format(bag_name))
     
     upload_command = 'apt-cmd s3 upload --host=s3.amazonaws.com --bucket="' + str(bucket_name) + '" ' + output_dir + "/" + bag_name + ".tar"
-    upload = subprocess.call(upload_command, shell=True, capture_output=True, text=True)
+    upload = subprocess.call(upload_command, shell=True)
     if upload:
         print("ERROR UPLOADING: {}".format(bag_name))
     else:

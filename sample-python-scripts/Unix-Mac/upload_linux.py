@@ -18,6 +18,7 @@ bags = [
         { "bag_path":"/path/to/bag.tar"}
 ]
 
+
 ###############################################################################################################################
 
 os.environ['APTRUST_AWS_KEY'] = aws_access_key
@@ -25,7 +26,7 @@ os.environ['APTRUST_AWS_SECRET'] = aws_secret_key
 
 for bag in bags:
         upload_command = 'apt-cmd s3 upload --host=s3.amazonaws.com --bucket="' + str(bucket_name) + '" ' + bag["bag_path"]
-        upload = subprocess.call(upload_command, shell=True, capture_output=True, text=True)
+        upload = subprocess.call(upload_command, shell=True)
         if upload: 
             print("ERROR UPLOADING: {}".format(bag["bag_path"]))
         else:
