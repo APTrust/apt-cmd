@@ -2,13 +2,6 @@
 
 This folder contains several examples of python3 scripts that utilize the apt-cmd command line tool. Examples are present for bagging multiple items, validating multiple bags, uploading multiple bags, and performing all three actions in the same script. 
 
-## Instructions for Running
-
-1. Fill in user specific info in between ### blocks of chosen script
-    * I.e. bucket_name, aws_access_key, etc.
-2. Run the program using python
-    * I.e. ```python3 bag_validate_upload_linux.py``` or ```python bag_validate_upload_windows.py```
-
 ## Prerequisite for scripts
 
 To run any of theses scripts, ```apt-cmd``` must be added to your systems path so that the system can access the executable. This can be done in different ways but here are straightforward ways in unix/mac and windows:
@@ -41,6 +34,13 @@ You can verify the binary is on the path by running ```command -v apt-cmd```
 8. Click OK
 
 You can verify the binary is on the path by running ```where.exe apt-cmd.exe```
+
+## Instructions for Running
+
+1. Fill in user specific info in between ### blocks of chosen script
+    * I.e. bucket_name, aws_access_key, etc.
+2. Run the program using python
+    * I.e. ```python3 bag_validate_upload_linux.py``` or ```python bag_validate_upload_windows.py```
 
 # Script Specific Information
 
