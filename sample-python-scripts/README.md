@@ -1,6 +1,13 @@
 # Sample Python Scripts for Using apt-cmd
 
-This folder contains several examples of python3 scripts that utilize the apt-cmd command line tool. Examples are present for bagging multiple items, validating multiple bags, uploading multiple bags, and performing all three actions in the same script.
+This folder contains several examples of python3 scripts that utilize the apt-cmd command line tool. Examples are present for bagging multiple items, validating multiple bags, uploading multiple bags, and performing all three actions in the same script. 
+
+## Instructions for Running
+
+1. Fill in user specific info in between ### blocks of chosen script
+    * I.e. bucket_name, aws_access_key, etc.
+2. Run the program using python
+    * I.e. ```python3 bag_validate_upload_linux.py``` or ```python bag_validate_upload.py```
 
 ## Prerequisite for scripts
 
