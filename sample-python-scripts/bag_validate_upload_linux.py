@@ -29,7 +29,7 @@ storage_option = ""
 jobs = [
         { "source_dir":"", "title": "", "access": "" },
         { "source_dir":"", "title": "", "access": "" }
-        ]
+]
 
 ###############################################################################################################################
 
@@ -50,23 +50,23 @@ for bag in jobs:
     bag_name = bag["source_dir"][-index_slash::]
 
     create_command = "apt-cmd bag create" + profile_full + manifest_algs + output_file + bag_name + ".tar" + bag_dir + source_organization + title + access + storage_option
-    create = subprocess.run(create_command, shell=True, capture_output=True, text=True)
-    if create.returncode:
+    create = subprocess.call(create_command, shell=True, capture_output=True, text=True)
+    if create:
         print("ERROR CREATING: {}".format(bag_name))
     else:
         print("Bagged: {}".format(bag_name))
 
     validate_command = "apt-cmd bag validate -p " + profile + " " + output_dir + "/" + bag_name + ".tar"
-    validate = subprocess.run(validate_command, shell=True, capture_output=True, text=True)
-    if validate.returncode: 
+    validate = subprocess.call(validate_command, shell=True, capture_output=True, text=True)
+    if validate: 
         print("ERROR VALIDATING: {}".format(bag_name))
         continue
     else:
         print("Validated: {}".format(bag_name))
     
     upload_command = 'apt-cmd s3 upload --host=s3.amazonaws.com --bucket="' + str(bucket_name) + '" ' + output_dir + "/" + bag_name + ".tar"
-    upload = subprocess.run(upload_command, shell=True, capture_output=True, text=True)
-    if upload.returncode:
+    upload = subprocess.call(upload_command, shell=True, capture_output=True, text=True)
+    if upload:
         print("ERROR UPLOADING: {}".format(bag_name))
     else:
         print("Uploaded: {}".format(bag_name))

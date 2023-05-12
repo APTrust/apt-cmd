@@ -18,8 +18,8 @@ bags = [
 
 for bag in bags:
     validate_command = "apt-cmd bag validate -p " + profile + " " + bag["bag_path"]
-    validate = subprocess.run(validate_command, shell=True, capture_output=True, text=True)
-    if validate.returncode: 
+    validate = subprocess.call(validate_command, shell=True, capture_output=True, text=True)
+    if validate: 
         print("ERROR VALIDATING: {}".format(bag["bag_path"]))
     else:
         print("Validated: {}".format(bag["bag_path"]))

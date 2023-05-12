@@ -6,31 +6,30 @@ import sys
 #                                               FILL IN SPECIFIC UPLOAD AND VALIDATE INFO BELOW                                            #
 
 # NAME OF RECEIVING BUCKET
-bucket_name = "aptrust.receiving.test.acr7d.edu"
+bucket_name = ""
 
 # AWS KEYS
 aws_access_key = ""
 aws_secret_key = ""
 
-output_dir = 'C:/Users/etd4sv/aptrust/test_bags/output_folder'
+output_dir = ""
 
 # BAG PROFILE TO USE WHEN CREATING
-profile = "aptrust"
+profile = ""
 
 # WHAT MAINIFEST AND TAG MANIFESTS TO INCLUDE: i.e. 'md5,sha256'
-manifest_algs = "md5,sha256"
+manifest_algs = ""
 
 # WHAT ORGANIZATION TO PUT IN THE BAG INFO
-source_organization = "College"
+source_organization = ""
 
 # BAG STORAGE TYPE: i.e. 'Standard'
-storage_option = "Standard"
+storage_option = ""
 
 jobs = [
-        { "source_dir":"C:/Users/etd4sv/aptrust/test_bags/input_folder/test_bag_1", "title": "Bag 1", "access": "Institution" },
-        { "source_dir":"C:/Users/etd4sv/aptrust/test_bags/input_folder/test_bag_2", "title": "Bag 2", "access": "Consortia" },
-        { "source_dir":"C:/Users/etd4sv/aptrust/test_bags/input_folder/test_bag_3", "title": "Bag 2", "access": "Consortia" }
-        ]
+        { "source_dir":"", "title": "", "access": "" },
+        { "source_dir":"", "title": "", "access": "" }
+]
 
 ###############################################################################################################################
 
@@ -50,21 +49,21 @@ for bag in jobs:
     index_slash = bag["source_dir"][::-1].find('/')
     bag_name = bag["source_dir"][-index_slash::]
 
-    create = subprocess.Popen(['apt-cmd.exe', 'bag', 'create', profile_full, manifest_algs, output_file + str(bag_name) + '.tar', bag_dir, source_organization, title, access, storage_option], shell=True, stdout=subprocess.DEVNULL)
-    if create.returncode: 
+    create = subprocess.call(['apt-cmd.exe', 'bag', 'create', profile_full, manifest_algs, output_file + str(bag_name) + '.tar', bag_dir, source_organization, title, access, storage_option], shell=True, stdout=subprocess.DEVNULL)
+    if create: 
         print("ERROR CREATING: {}".format(bag_name))
     else:
         print("Bagged: {}".format(bag_name))
 
-    validate = subprocess.Popen(['apt-cmd.exe', 'bag', 'validate', '-p', profile, output_dir + "/" + bag_name + ".tar"], shell=True, stdout=subprocess.DEVNULL)
-    if validate.returncode:
+    validate = subprocess.call(['apt-cmd.exe', 'bag', 'validate', '-p', profile, output_dir + "/" + bag_name + ".tar"], shell=True, stdout=subprocess.DEVNULL)
+    if validate:
         print("ERROR VALIDATING: {}".format(bag_name))
         continue
     else:
         print("Validated: {}".format(bag_name))
     
-    upload = subprocess.run(['apt-cmd.exe', 's3', 'upload', '--host=s3.amazonaws.com', '--bucket=' + str(bucket_name), output_dir + "/" + bag_name + ".tar"], shell=True, stdout=subprocess.DEVNULL)
-    if upload.returncode: 
+    upload = subprocess.call(['apt-cmd.exe', 's3', 'upload', '--host=s3.amazonaws.com', '--bucket=' + str(bucket_name), output_dir + "/" + bag_name + ".tar"], shell=True, stdout=subprocess.DEVNULL)
+    if upload: 
         print("ERROR UPLOADING: {}".format(bag_name))
     else:
         print("Uploaded: {}".format(bag_name))

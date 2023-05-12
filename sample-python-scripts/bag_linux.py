@@ -23,7 +23,7 @@ storage_option = ""
 jobs = [
         { "source_dir":"", "title": "", "access": "" },
         { "source_dir":"", "title": "", "access": "" }
-        ]
+]
 
 ###############################################################################################################################
 
@@ -41,8 +41,8 @@ for bag in jobs:
     bag_name = bag["source_dir"][-index_slash::]
 
     create_command = "apt-cmd bag create" + profile_full + manifest_algs + output_file + bag_name + ".tar" + bag_dir + source_organization + title + access + storage_option
-    create = subprocess.run(create_command, shell=True, capture_output=True, text=True)
-    if create.returncode:
+    create = subprocess.call(create_command, shell=True, capture_output=True, text=True)
+    if create:
         print("ERROR CREATING: {}".format(bag_name))
     else:
         print("Bagged: {}".format(bag_name))

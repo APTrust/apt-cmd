@@ -14,6 +14,7 @@ aws_secret_key = ""
 
 # LIST PATH OF BAGS TO BE UPLOADED
 bags = [
+        { "bag_path":"/path/to/bag.tar"},
         { "bag_path":"/path/to/bag.tar"}
 ]
 
@@ -24,8 +25,8 @@ os.environ['APTRUST_AWS_SECRET'] = aws_secret_key
 
 for bag in bags:
         upload_command = 'apt-cmd s3 upload --host=s3.amazonaws.com --bucket="' + str(bucket_name) + '" ' + bag["bag_path"]
-        upload = subprocess.run(upload_command, shell=True, capture_output=True, text=True)
-        if upload.returncode: 
+        upload = subprocess.call(upload_command, shell=True, capture_output=True, text=True)
+        if upload: 
             print("ERROR UPLOADING: {}".format(bag["bag_path"]))
         else:
             print("Uploaded: {}".format(bag["bag_path"]))
