@@ -54,6 +54,7 @@ for bag in jobs:
     create = subprocess.call(create_command, shell=True)
     if create:
         print("ERROR CREATING: {}".format(bag_name))
+        continue
     else:
         print("Bagged: {}".format(bag_name))
 

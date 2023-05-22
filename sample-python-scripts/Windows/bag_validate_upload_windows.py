@@ -36,7 +36,7 @@ jobs = [
 profile_full = "--profile=" + profile
 manifest_algs = "--manifest-algs=" + manifest_algs
 source_organization = '--tags=bag-info.txt/Source-Organization=' + source_organization
-output_file = "--output-file=" + output_dir + "/"
+output_file = "--output-file=" + output_dir + "\\"
 storage_option = '--tags=aptrust-info.txt/Storage-Option=' + storage_option
 
 os.environ['APTRUST_AWS_KEY'] = aws_access_key
@@ -46,23 +46,24 @@ for bag in jobs:
     title = '--tags=aptrust-info.txt/Title=' + bag["title"]
     access = '--tags=aptrust-info.txt/Access=' + bag["access"]
     bag_dir = "--bag-dir=" + bag["source_dir"]
-    index_slash = bag["source_dir"][::-1].find('/')
+    index_slash = bag["source_dir"][::-1].find('\\')
     bag_name = bag["source_dir"][-index_slash::]
 
     create = subprocess.call(['apt-cmd.exe', 'bag', 'create', profile_full, manifest_algs, output_file + str(bag_name) + '.tar', bag_dir, source_organization, title, access, storage_option], shell=True, stdout=subprocess.DEVNULL)
     if create: 
         print("ERROR CREATING: {}".format(bag_name))
+        continue
     else:
         print("Bagged: {}".format(bag_name))
 
-    validate = subprocess.call(['apt-cmd.exe', 'bag', 'validate', '-p', profile, output_dir + "/" + bag_name + ".tar"], shell=True, stdout=subprocess.DEVNULL)
+    validate = subprocess.call(['apt-cmd.exe', 'bag', 'validate', '-p', profile, output_dir + "\\" + bag_name + ".tar"], shell=True, stdout=subprocess.DEVNULL)
     if validate:
         print("ERROR VALIDATING: {}".format(bag_name))
         continue
     else:
         print("Validated: {}".format(bag_name))
     
-    upload = subprocess.call(['apt-cmd.exe', 's3', 'upload', '--host=s3.amazonaws.com', '--bucket=' + str(bucket_name), output_dir + "/" + bag_name + ".tar"], shell=True, stdout=subprocess.DEVNULL)
+    upload = subprocess.call(['apt-cmd.exe', 's3', 'upload', '--host=s3.amazonaws.com', '--bucket=' + str(bucket_name), output_dir + "\\" + bag_name + ".tar"], shell=True, stdout=subprocess.DEVNULL)
     if upload: 
         print("ERROR UPLOADING: {}".format(bag_name))
     else:
