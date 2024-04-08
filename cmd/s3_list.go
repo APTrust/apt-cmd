@@ -17,12 +17,12 @@ import (
 var s3ListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List items in an S3 bucket",
-	Long: `You can list files from any S3-compatible service. For this to 
-work, you will need to have APTRUST_AWS_KEY and APTRUST_AWS_SECRET set in 
+	Long: `You can list files from any S3-compatible service. For this to
+work, you will need to have APTRUST_AWS_KEY and APTRUST_AWS_SECRET set in
 your environment, or in a config file specified with the --config flag.
 
 List output is in JSON format, unless you specify --format=text.
-	
+
 Examples:
 
 List items in my_bucket with prefix "photo":
@@ -37,10 +37,22 @@ List 10 items in my_bucket with prefix "photo", using plain text output:
                     --maxitems=10 \
                     --format=text
 
+List items in sub-folder "music" of my_bucket. Note the trailing slash after
+"music/".
+
+    apt-cmd s3 list --host=s3.amazonaws.com --bucket=my_bucket --prefix=music/
+
+List items in a nested folder. Again, note the trailing slash:
+
+    apt-cmd s3 list --host=s3.amazonaws.com \
+                    --bucket=my_bucket \
+                    --prefix=music/danielle_ponder/
+
+
 Full online documentation:
 
   https://aptrust.github.io/userguide/partner_tools/
-					
+
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		bucket := cmd.Flags().Lookup("bucket").Value.String()
