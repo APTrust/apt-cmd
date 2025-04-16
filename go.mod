@@ -10,12 +10,6 @@ require (
 )
 
 require (
-	github.com/go-ini/ini v1.67.0 // indirect
-	github.com/minio/minio-go v6.0.14+incompatible // indirect
-	github.com/mitchellh/go-homedir v1.1.0 // indirect
-)
-
-require (
 	github.com/APTrust/preservation-services v0.0.0-20230417165113-14b675c2d974
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/bmizerany/perks v0.0.0-20141205001514-d9a9656a3a4b // indirect
@@ -52,10 +46,10 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.2
 	github.com/subosito/gotenv v1.4.2 // indirect
-	golang.org/x/crypto v0.33.0 // indirect
-	golang.org/x/net v0.35.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0
+	golang.org/x/crypto v0.36.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
