@@ -252,8 +252,12 @@ func LoadProfile(name string) (*bagit.Profile, error) {
 	var data []byte
 	var err error
 	switch name {
-	case "aptrust":
+	case "aptrust": // default aptrust is 2.3
+		data, err = profiles.ReadFile("profiles/aptrust-v2.3.json")
+	case "aptrust-2.2": // explicitly load older profile
 		data, err = profiles.ReadFile("profiles/aptrust-v2.2.json")
+	case "aptrust-2.3": // explicitly load 2.3 profile
+		data, err = profiles.ReadFile("profiles/aptrust-v2.3.json")
 	case "btr":
 		data, err = profiles.ReadFile("profiles/btr-v1.0.json")
 	case "empty":

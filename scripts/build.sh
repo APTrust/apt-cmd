@@ -8,8 +8,11 @@ COMMIT_ID=`git rev-parse --short HEAD`
 DATE=`date +"%Y-%m-%d"`
 CGO_FLAG=""
 
+BUILD_TAGS="posix"
+
 if [[ $OS =~ "MINGW" || $OS =~ "Windows" ]]; then
     APPNAME="apt-cmd.exe"
+    BUILD_TAGS="windows"
 fi
 
 BUILD_DIR="dist"
@@ -30,9 +33,9 @@ echo ""
 mkdir -p $BUILD_DIR
 
 if [[ $OS =~ "Linux" ]]; then
-    CGO_ENABLED=0 go build -o ${OUTPUT_FILE} -ldflags="-X github.com/APTrust/apt-cmd/cmd.CommitId=$COMMIT_ID -X github.com/APTrust/apt-cmd/cmd.Version=$VERSION -X github.com/APTrust/apt-cmd/cmd.BuildDate=$DATE"
+    CGO_ENABLED=0 go build -tags ${BUILD_TAGS} -o ${OUTPUT_FILE} -ldflags="-X github.com/APTrust/apt-cmd/cmd.CommitId=$COMMIT_ID -X github.com/APTrust/apt-cmd/cmd.Version=$VERSION -X github.com/APTrust/apt-cmd/cmd.BuildDate=$DATE"
 else
-    go build -o ${OUTPUT_FILE} -ldflags="-X github.com/APTrust/apt-cmd/cmd.CommitId=$COMMIT_ID -X github.com/APTrust/apt-cmd/cmd.Version=$VERSION -X github.com/APTrust/apt-cmd/cmd.BuildDate=$DATE"
+    go build -tags ${BUILD_TAGS} -o ${OUTPUT_FILE} -ldflags="-X github.com/APTrust/apt-cmd/cmd.CommitId=$COMMIT_ID -X github.com/APTrust/apt-cmd/cmd.Version=$VERSION -X github.com/APTrust/apt-cmd/cmd.BuildDate=$DATE"
 fi
 
 

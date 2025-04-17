@@ -26,27 +26,27 @@ below demonstrates how to speficy flags and tag values.
 
 For tag values, use the format "filename.txt/Tag-Name=tag value". If you
 omit the file name, it defaults to bag-info.txt. For example, the following
-two tags will both be written into the Source-Organization tag in 
+two tags will both be written into the Source-Organization tag in
 bag-info.txt:
 
-  --tags="bag-info.txt/Source-Organization=Faber College" 
+  --tags="bag-info.txt/Source-Organization=Faber College"
   --tags="Source-Organization=Faber College"
 
 Note that tag values are quoted in their entirety, both the name and
 the value.
 
-Apply double quotes to values containing special characters such as 
-spaces and symbols and to values containing environment variables that 
+Apply double quotes to values containing special characters such as
+spaces and symbols and to values containing environment variables that
 you want to expand, such as "$HOME".
 
 Apply single quotes to values containing symbols that you don't want
-the shell to expand, such as curly braces, ampersands, and random dollar 
+the shell to expand, such as curly braces, ampersands, and random dollar
 signs.
 
 You can specify any tag files and tag names you want.
 
 The following example packages the directory /home/josie/photos according
-to the APTrust BagIt profile and writes the tarred bag into 
+to the APTrust BagIt profile and writes the tarred bag into
 /home/josie/bags/photos.tar.
 
 This bag will include md5 and sha256 manifests and tag manifests. It will
@@ -64,20 +64,28 @@ apt-cmd bag create \
     --tags='bag-info.txt/Source-Organization=Faber College' \
     --tags='Custom-Tag=Single quoted because it {contains} $weird &characters'
 
+Profile options:
+
+  aptrust     - Use the latest APTrust BagIt profile (currently 2.3)
+  aptrust-2.2 - Use the older APTrust version 2.2 profile
+  btr         - Use Beyond the Repository BagIt profile
+  empty       - Use an empty BagIt profile. This profile defines the
+                minimum viable bag under the BagIt specification.
+
 Troubleshooting:
 
 1. Use the --debug flag to get the program to tell what it thinks it's
    supposed to be doing.
 2. If you use backslashes, as in the example able, be sure there are no
-   trailing spaces or any characters other than a newline following the 
+   trailing spaces or any characters other than a newline following the
    backslash.
 
 Limitations:
 
-1. This tool currently supports only APTrust, BTR, and empty/generic 
+1. This tool currently supports only APTrust, BTR, and empty/generic
    BagIt profiles.
 2. For now, all bags will be output as tar files.
-3. This tool currently supports only the md5, sha1, sha256, and sha512 
+3. This tool currently supports only the md5, sha1, sha256, and sha512
    algorithms for manifests and tag manifests.
 4. This tool currently will not generate a fetch.txt file.
 

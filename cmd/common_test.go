@@ -180,6 +180,16 @@ func TestLoadProfile(t *testing.T) {
 	profile, err := cmd.LoadProfile("aptrust")
 	require.Nil(t, err)
 	require.NotNil(t, profile)
+	assert.Equal(t, "https://raw.githubusercontent.com/APTrust/preservation-services/master/profiles/aptrust-v2.3.json", profile.BagItProfileInfo.BagItProfileIdentifier)
+
+	profile, err = cmd.LoadProfile("aptrust-2.3")
+	require.Nil(t, err)
+	require.NotNil(t, profile)
+	assert.Equal(t, "https://raw.githubusercontent.com/APTrust/preservation-services/master/profiles/aptrust-v2.3.json", profile.BagItProfileInfo.BagItProfileIdentifier)
+
+	profile, err = cmd.LoadProfile("aptrust-2.2")
+	require.Nil(t, err)
+	require.NotNil(t, profile)
 	assert.Equal(t, "https://raw.githubusercontent.com/APTrust/preservation-services/master/profiles/aptrust-v2.2.json", profile.BagItProfileInfo.BagItProfileIdentifier)
 
 	profile, err = cmd.LoadProfile("btr")
