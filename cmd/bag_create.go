@@ -148,6 +148,11 @@ https://aptrust.github.io/userguide/partner_tools/
 			os.Exit(EXIT_USER_ERR)
 		}
 
+		if !util.FileExists(absPath) {
+			fmt.Fprintln(os.Stderr, "Directory to be bagged,", absPath, ", does not exist.")
+			os.Exit(EXIT_USER_ERR)
+		}
+
 		files, err := util.RecursiveFileList(absPath)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Cannot build list of all files to be bagged. Be sure you have read permissions on all of these files.", err.Error())
