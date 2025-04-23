@@ -32,7 +32,7 @@ To validate a bag using the empty profile:
   apt-cmd bag validate -p empty my_bag.tar
 
 The empty profile simply ensures the bag is valid according to the general
-BagIt specification. 
+BagIt specification.
 
 Limitations:
 
@@ -84,5 +84,5 @@ https://aptrust.github.io/userguide/partner_tools/
 
 func init() {
 	bagCmd.AddCommand(validateCmd)
-	validateCmd.Flags().StringP("profile", "p", "", "BagIt profile: 'aptrust', 'btr' or 'empty'")
+	validateCmd.Flags().StringP("profile", "p", "", "BagIt profile: 'aptrust', 'aptrust-2.2', 'btr' or 'empty'")
 }

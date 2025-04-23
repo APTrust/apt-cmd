@@ -20,12 +20,16 @@ anyone can use apt-cmd's bagging and S3 features.
 
 # Downloads
 
+The latest version is 3.0.0, released April 23, 2025.
+
 | Platform | Architecture | Version | SHA-256 |
 | -------- | ------------ | ------- | ------- |
-| [Windows](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.0-beta/windows/apt-cmd.exe) | Intel 64-bit | v3.0.0-beta | b12d7daf68ca2a2ea99ea208143e4571cf49fd8221ea1998a9b4f5db9774b631 |
-| [Mac Intel](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.0-beta/mac-intel/apt-cmd)  | Intel 64-bit | v3.0.0-beta | 1b5ceb015744e9ca818e5526f0940988fd4dad7f56c1bde105762bd89522265b |
-| [Mac ARM](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.0-beta/mac-arm/apt-cmd) | Apple Silicon (M series) | v3.0.0-beta | 0327e04b44137ce856b342542563133b9f8184364513394013bf200939dd6c8e |
-| [Linux](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.0-beta/linux/apt-cmd) | Intel 64-bit | v3.0.0-beta | 88d13960e50478066a6426ffd49e4763feece4642b7420e0d2e4f8d9412e9c88 |
+| [Windows](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.0-beta/windows/apt-cmd.exe) | ARM 64-bit | v3.0.0 |  |
+| [Windows](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.0-beta/windows/apt-cmd.exe) | Intel 64-bit | v3.0.0 |  |
+| [Mac Intel](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.0-beta/mac-intel/apt-cmd)  | Intel 64-bit | v3.0.0 |  |
+| [Mac ARM](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.0-beta/mac-arm/apt-cmd) | Apple Silicon (M series) | v3.0.0 |  |
+| [Linux](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.0-beta/linux/apt-cmd) | ARM 64-bit | v3.0.0 |  |
+| [Linux](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.0-beta/linux/apt-cmd) | Intel 64-bit | v3.0.0 |  |
 
 # Documentation
 

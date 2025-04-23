@@ -1,33 +1,33 @@
 #!/usr/bin/env bash
 
 OS=`uname`
+CURRENT_ARCHITECTURE=`uname -m`
 APPNAME="apt-cmd"
 TEST_CMD="./scripts/test.rb units"
 VERSION=`git describe --tags`
 COMMIT_ID=`git rev-parse --short HEAD`
 DATE=`date +"%Y-%m-%d"`
 CGO_FLAG=""
-
-BUILD_TAGS="posix"
-
-if [[ $OS =~ "MINGW" || $OS =~ "Windows" ]]; then
-    APPNAME="apt-cmd.exe"
-    BUILD_TAGS="windows"
-fi
-
+CURRENT_OS="linux"
 BUILD_DIR="dist"
-OUTPUT_FILE="${BUILD_DIR}/${APPNAME}"
-
 LDFLAGS="-X github.com/APTrust/apt-cmd/cmd.CommitId=$COMMIT_ID -X github.com/APTrust/apt-cmd/cmd.Version=$VERSION -X github.com/APTrust/apt-cmd/cmd.BuildDate=$DATE"
 
-echo "Running unit tests"
-$TEST_CMD
-if [[ $? != 0 ]]; then
-    echo "Aborting because unit tests failed."
-    exit 1
-else
-    echo "Tests passed. Proceeding with build."
+if [[ $OS =~ "MINGW" || $OS =~ "Windows" ]]; then
+    CURRENT_OS="windows"
+elif [[ $OS =~ "Darwin" ]]; then
+    CURRENT_OS="darwin"
 fi
+
+run_unit_tests() {
+    echo "Running unit tests"
+    $TEST_CMD
+    if [[ $? != 0 ]]; then
+        echo "Aborting because unit tests failed."
+        exit 1
+    else
+        echo "Tests passed. Proceeding with build."
+    fi
+}
 
 build_tags() {
     case "$1" in
@@ -51,37 +51,46 @@ app_name() {
     esac
 }
 
+build_all() {
+    echo "Building Commit ID: ${COMMIT_ID}, Version: ${VERSION}"
 
+    platforms=("darwin" "linux" "windows")
+    architectures=("amd64" "arm64")
 
-echo "Commit ID: ${COMMIT_ID}, Version: ${VERSION}"
-echo "Building ${OUTPUT_FILE}"
-echo ""
-mkdir -p $BUILD_DIR
-
-platforms=("darwin" "linux" "windows")
-architectures=("amd64" "arm64")
-
-for platform in "${platforms[@]}"
-do
-    for architecture in "${architectures[@]}"
+    for platform in "${platforms[@]}"
     do
-        echo "Creating directory $BUILD_DIR/$platform/$architecture"
-        mkdir -p $BUILD_DIR/$platform/$architecture
-        echo "Building $platform/$architecture"
-        GOOS=$platform GOARCH=$architecture CGO_ENABLED=0 go build -tags=$(build_tags $platform) -o $BUILD_DIR/$platform/$architecture/$(app_name $platform) -ldflags="$LDFLAGS"
+        for architecture in "${architectures[@]}"
+        do
+            echo " "
+            echo "Creating directory $BUILD_DIR/$platform/$architecture"
+            mkdir -p $BUILD_DIR/$platform/$architecture
+            echo "Building $BUILD_DIR/$platform/$architecture/$(app_name $platform)"
+            GOOS=$platform GOARCH=$architecture CGO_ENABLED=0 go build -tags=$(build_tags $platform) -o $BUILD_DIR/$platform/$architecture/$(app_name $platform) -ldflags="$LDFLAGS"
+        done
     done
-done
+}
 
-# if [[ $OS =~ "Linux" ]]; then
-#     CGO_ENABLED=0 go build -tags ${BUILD_TAGS} -o ${OUTPUT_FILE} -ldflags="-X github.com/APTrust/apt-cmd/cmd.CommitId=$COMMIT_ID -X github.com/APTrust/apt-cmd/cmd.Version=$VERSION -X github.com/APTrust/apt-cmd/cmd.BuildDate=$DATE"
-# else
-#     go build -tags ${BUILD_TAGS} -o ${OUTPUT_FILE} -ldflags="-X github.com/APTrust/apt-cmd/cmd.CommitId=$COMMIT_ID -X github.com/APTrust/apt-cmd/cmd.Version=$VERSION -X github.com/APTrust/apt-cmd/cmd.BuildDate=$DATE"
-# fi
+run_version() {
+    EXECUTABLE=$BUILD_DIR/$CURRENT_OS/$CURRENT_ARCHITECTURE/apt-cmd
+    if [[ "$CURRENT_OS" == "windows" ]]; then
+        EXECUTABLE=$BUILD_DIR/$CURRENT_OS/$CURRENT_ARCHITECTURE/apt-cmd.exe
+    fi
 
+    echo ""
+    echo "Running ${EXECUTABLE} version..."
+    echo ""
 
-# echo ""
-# echo "Running ${OUTPUT_FILE} version..."
-# echo ""
+    ${EXECUTABLE} version
+    echo ""
+}
 
-# ${OUTPUT_FILE} version
-# echo ""
+#
+# Run the whole show.
+#
+# TODO:
+#    - Run this as a GitLab workflow.
+#    - If build succeeds, upload executables to our S3 public download bucket.
+#
+run_unit_tests
+build_all
+run_version

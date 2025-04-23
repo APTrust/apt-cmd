@@ -209,7 +209,7 @@ https://aptrust.github.io/userguide/partner_tools/
 
 func init() {
 	bagCmd.AddCommand(createCmd)
-	createCmd.Flags().StringP("profile", "p", "", "BagIt profile: 'aptrust', 'btr' or 'empty'")
+	createCmd.Flags().StringP("profile", "p", "", "BagIt profile: 'aptrust', 'aptrust-2.2', 'btr' or 'empty'")
 	createCmd.Flags().StringP("bag-dir", "b", "", "Directory containing files you want to package into a bag")
 	createCmd.Flags().StringP("output-file", "o", "", "Output file. Where should we write the bag?")
 	createCmd.Flags().StringSliceVarP(&manifestAlgs, "manifest-algs", "m", []string{""}, "Manifest algorithms. Specify one, or use comma-separated list for multiple. Supported algorithms: md5, sha1, sha256, sha512. Default is sha256.")
