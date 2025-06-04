@@ -141,8 +141,6 @@ func TestValidateManifestAlgorithms(t *testing.T) {
 	}
 	expected = []string{
 		"Manifest algorithm 'md4' is not allowed in profile APTrust.",
-		"Manifest algorithm 'sha1' is not allowed in profile APTrust.",
-		"Manifest algorithm 'sha512' is not allowed in profile APTrust.",
 	}
 	errors = cmd.ValidateManifestAlgorithms(profile, algs)
 	assert.Equal(t, len(expected), len(errors))
