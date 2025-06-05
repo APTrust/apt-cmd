@@ -2,6 +2,10 @@
 
 For the user guide, see https://aptrust.github.io/userguide/partner_tools/.
 
+## [3.0.1] 2025-06-05
+
+* Fixed omissions in the algorithms lists for allowed manifests and allowed tag manifests in version 2.3 of the APTrust BagIt profile. This list now correctly includes sha1 and sha512 as allowed algorithms.
+
 ## [3.0.0] 2025-04-23
 
 * Added support for APTrust BagIt Profile [version 2.3](https://github.com/APTrust/preservation-services/blob/master/profiles/aptrust-v2.3.json), which is identical to the [2.2 profile](https://github.com/APTrust/preservation-services/blob/master/profiles/aptrust-v2.2.json) except for the addition of Wasabi-TX as a valid storage option.
