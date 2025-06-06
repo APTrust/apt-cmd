@@ -2,6 +2,10 @@
 
 For the user guide, see https://aptrust.github.io/userguide/partner_tools/.
 
+## [3.0.2] 2025-06-05
+
+* Storage-Option tag is no longer required in APTrust BagIt profile v2.3, to match v2.2.
+
 ## [3.0.1] 2025-06-05
 
 * Fixed omissions in the algorithms lists for allowed manifests and allowed tag manifests in version 2.3 of the APTrust BagIt profile. This list now correctly includes sha1 and sha512 as allowed algorithms.

@@ -20,16 +20,16 @@ anyone can use apt-cmd's bagging and S3 features.
 
 # Downloads
 
-The latest version is 3.0.1, released June 5, 2025. See the [change log](./CHANGELOG.md) for details.
+The latest version is 3.0.2, released June 6, 2025. See the [change log](./CHANGELOG.md) for details.
 
 | Platform | Architecture | Version | SHA-256 |
 | -------- | ------------ | ------- | ------- |
-| [Windows](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.1/windows/amd64/apt-cmd.exe) | Intel 64-bit | v3.0.1 | f22212ce64245a167af265d46e07e86c6ac70af34e116bf788e2480bee87e23c |
-| [Windows](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.1/windows/arm64/apt-cmd.exe) | ARM 64-bit | v3.0.1 | c3a1f335acdbac5723c0fc6ada3cecc23fb53b5b98fda477e073e416318759bd |
-| [Mac Intel](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.1/mac/amd64/apt-cmd)  | Intel 64-bit | v3.0.1 | 7d7ce0d9685361685a261e2ba729bc058d59b5f5c48ef19b4f59ce9f6dfd7655 |
-| [Mac ARM](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.1/mac/arm64/apt-cmd) | Apple Silicon (M series) | v3.0.1 | 766d7a2d765d53064dcd0b4db3b6d1d320b7f681da50e8e7ab561333f4fa546d |
-| [Linux](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.1/linux/amd64/apt-cmd) | Intel 64-bit | v3.0.1 | 83ecf887f253c6253c149500cc843fd40cce303a134213ce01f123dd0f3c4740 |
-| [Linux](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.1/linux/arm64/apt-cmd) | ARM 64-bit | v3.0.1 | b40a8f6f7ba783e3019c00a47ea30e238b26a4cfa7c22c5559800db6f4b0895f |
+| [Windows](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.2/windows/amd64/apt-cmd.exe) | Intel 64-bit | v3.0.1 | ff998da3ac9dd555e3a58ce800f905b42ecc338bbb370cda3226b3ce1a19ddcb |
+| [Windows](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.2/windows/arm64/apt-cmd.exe) | ARM 64-bit | v3.0.1 | 419e41f40c485c61b4584ea28d91a02bf317fe54f94bbbab12156473ae7ace18 |
+| [Mac Intel](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.2/mac/amd64/apt-cmd)  | Intel 64-bit | v3.0.1 | 886a0cb98a0f7e3374fa07b11e6646d45ce76bedaca911db64371d7f88aadba9 |
+| [Mac ARM](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.2/mac/arm64/apt-cmd) | Apple Silicon (M series) | v3.0.1 | c24f34295ec2113fdc91db7b1c1c1b3faff0199bca8e0a6603541ec65e967204 |
+| [Linux](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.2/linux/amd64/apt-cmd) | Intel 64-bit | v3.0.1 | ef53916c63a57470db264406323740cfbd23c353dbda18b43dbf8cf65d418cb7 |
+| [Linux](https://s3.amazonaws.com/aptrust.public.download/apt-cmd/v3.0.2/linux/arm64/apt-cmd) | ARM 64-bit | v3.0.1 | 46b9d592a119633a686b995cda48f24b2302eadf3dabde003ecd7b0e1690b605 |
 
 # Documentation
 

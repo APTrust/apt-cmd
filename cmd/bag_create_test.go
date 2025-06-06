@@ -52,7 +52,6 @@ func TestValidateTags(t *testing.T) {
 	expected := []string{
 		"Required tag bagit.txt/BagIt-Version is missing.",
 		"Required tag bagit.txt/Tag-File-Character-Encoding is missing.",
-		"Required tag bag-info.txt/Source-Organization is missing.",
 		"Required tag aptrust-info.txt/Title is missing.",
 		"Required tag aptrust-info.txt/Access is missing.",
 		"Required tag aptrust-info.txt/Storage-Option is missing.",
@@ -64,7 +63,6 @@ func TestValidateTags(t *testing.T) {
 	assert.Equal(t, expected, errors)
 
 	expected = []string{
-		"Required tag bag-info.txt/Source-Organization is missing.",
 		"Required tag aptrust-info.txt/Title is missing.",
 		"Required tag aptrust-info.txt/Access is missing.",
 		"Required tag aptrust-info.txt/Storage-Option is missing.",
