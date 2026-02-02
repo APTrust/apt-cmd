@@ -2,6 +2,11 @@
 
 For the user guide, see https://aptrust.github.io/userguide/partner_tools/.
 
+## [3.0.3] 2026-02-02
+
+* Updated to go 1.24.11
+* Updated dart runner dependency to v1.0.2
+
 ## [3.0.2] 2025-06-05
 
 * Storage-Option tag is no longer required in APTrust BagIt profile v2.3, to match v2.2.
