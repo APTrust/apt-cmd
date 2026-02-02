@@ -1,8 +1,6 @@
 module github.com/APTrust/apt-cmd
 
-go 1.23.0
-
-toolchain go1.23.3
+go 1.24.11
 
 require (
 	github.com/APTrust/dart-runner v0.0.0-20230309150048-55a82956efed

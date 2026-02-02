@@ -1,6 +1,9 @@
 package cmd
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type Config struct {
 	RegistryURL        string
@@ -28,7 +31,7 @@ func (config *Config) ValidateRegistryConfig() error {
 	}
 	if errMsg != "" {
 		errMsg += fmt.Sprintf("(Config source: %s)", config.ConfigSource)
-		return fmt.Errorf(errMsg)
+		return errors.New(errMsg)
 	}
 	return nil
 }
@@ -43,7 +46,7 @@ func (config *Config) ValidateAWSCredentials() error {
 	}
 	if errMsg != "" {
 		errMsg += fmt.Sprintf("(Config source: %s)", config.ConfigSource)
-		return fmt.Errorf(errMsg)
+		return errors.New(errMsg)
 	}
 	return nil
 }
