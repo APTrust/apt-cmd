@@ -79,8 +79,8 @@ func TestBagValidate_BadBags(t *testing.T) {
 	testInvalidBag(t, "aptrust", "example.edu.sample_missing_data_file.tar", "file is missing from bag")
 	testInvalidBag(t, "aptrust", "example.edu.sample_no_bag_info.tar", "Required tag is missing")
 	testInvalidBag(t, "aptrust", "example.edu.sample_no_data_dir.tar", "file is missing from bag", "Required tag is missing")
-	testInvalidBag(t, "aptrust", "example.edu.sample_no_md5_manifest.tar", "Required manifest is missing", "Required tag is missing")
-	testInvalidBag(t, "aptrust", "example.edu.tagsample_bad.tar", "Tag has illegal value", "Required tag is present but has no value", "does not match digest", "file is missing from bag")
+	testInvalidBag(t, "aptrust", "example.edu.sample_no_md5_manifest.tar", "Required manifest 'manifest-md5.txt' is missing", "Required tag is missing")
+	testInvalidBag(t, "aptrust", "example.edu.tagsample_bad.tar", "Tag 'aptrust-info.txt/Access' has illegal value", "Required tag 'aptrust-info.txt/Title' is present but has no value.", "does not match digest", "file is missing from bag")
 }
 
 func testValidBag(t *testing.T, profileName, tarFileName string) {

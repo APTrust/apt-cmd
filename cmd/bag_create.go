@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/APTrust/dart-runner/bagit"
+	"github.com/APTrust/dart-runner/core"
 	"github.com/APTrust/dart-runner/util"
 	"github.com/spf13/cobra"
 )
@@ -153,7 +153,7 @@ https://aptrust.github.io/userguide/partner_tools/
 			os.Exit(EXIT_USER_ERR)
 		}
 
-		files, err := util.RecursiveFileList(absPath)
+		files, err := util.RecursiveFileList(absPath, false)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Cannot build list of all files to be bagged. Be sure you have read permissions on all of these files.", err.Error())
 			os.Exit(EXIT_USER_ERR)
@@ -193,7 +193,7 @@ https://aptrust.github.io/userguide/partner_tools/
 		}
 
 		// Create the bag
-		bagger := bagit.NewBagger(absOutputPath, profile, files)
+		bagger := core.NewBagger(absOutputPath, profile, files)
 		ok := bagger.Run()
 		if !ok {
 			for key, value := range bagger.Errors {
@@ -216,10 +216,10 @@ func init() {
 	createCmd.Flags().StringSliceVarP(&userSuppliedTags, "tags", "t", []string{""}, "Tag values to write into tag files. You can specify this flag multiple times. See --help for full documentation.")
 }
 
-func EnsureDefaultTags(tags []*bagit.TagDefinition) []*bagit.TagDefinition {
+func EnsureDefaultTags(tags []*core.TagDefinition) []*core.TagDefinition {
 	bagitVersion := FindTag(tags, "bagit.txt", "BagIt-Version")
 	if bagitVersion == nil {
-		versionTag := &bagit.TagDefinition{
+		versionTag := &core.TagDefinition{
 			TagFile:   "bagit.txt",
 			TagName:   "BagIt-Version",
 			UserValue: "1.0",
@@ -230,7 +230,7 @@ func EnsureDefaultTags(tags []*bagit.TagDefinition) []*bagit.TagDefinition {
 	}
 	encoding := FindTag(tags, "bagit.txt", "Tag-File-Character-Encoding")
 	if encoding == nil {
-		encodingTag := &bagit.TagDefinition{
+		encodingTag := &core.TagDefinition{
 			TagFile:   "bagit.txt",
 			TagName:   "Tag-File-Character-Encoding",
 			UserValue: "UTF-8",
@@ -246,7 +246,7 @@ func EnsureDefaultTags(tags []*bagit.TagDefinition) []*bagit.TagDefinition {
 // present and contain valid values. We check this BEFORE bagging because
 // in case where the user is packaging 500+ GB, they don't want to wait
 // two hours to find out their bag is invalid.
-func ValidateTags(profile *bagit.Profile, tags []*bagit.TagDefinition) []string {
+func ValidateTags(profile *core.BagItProfile, tags []*core.TagDefinition) []string {
 	errors := make([]string, 0)
 	for _, tagDef := range profile.Tags {
 		hasValue := false
@@ -273,7 +273,7 @@ func ValidateTags(profile *bagit.Profile, tags []*bagit.TagDefinition) []string 
 // algorithms are allowed by the profile, and whether the user specified all
 // of the profile's required algorithms. We do this work up front, before creating
 // the bag, to avoid creating an invalid bag.
-func ValidateManifestAlgorithms(profile *bagit.Profile, algs []string) []string {
+func ValidateManifestAlgorithms(profile *core.BagItProfile, algs []string) []string {
 	errors := make([]string, 0)
 	for _, alg := range algs {
 		isAllowed := false
@@ -301,7 +301,7 @@ func ValidateManifestAlgorithms(profile *bagit.Profile, algs []string) []string 
 }
 
 // TODO: Change this to find tags? Tags can repeat.
-func FindTag(tags []*bagit.TagDefinition, tagFile, tagName string) *bagit.TagDefinition {
+func FindTag(tags []*core.TagDefinition, tagFile, tagName string) *core.TagDefinition {
 	for _, tag := range tags {
 		if tag.TagFile == tagFile && tag.TagName == tagName {
 			return tag

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/APTrust/dart-runner/bagit"
+	"github.com/APTrust/dart-runner/core"
 	"github.com/spf13/cobra"
 )
 
@@ -59,7 +59,7 @@ https://aptrust.github.io/userguide/partner_tools/
 			os.Exit(EXIT_RUNTIME_ERR)
 		}
 		logger.Debugf("Validating bag %s using profile %s", pathToBag, profile.Name)
-		validator, err := bagit.NewValidator(pathToBag, profile)
+		validator, err := core.NewValidator(pathToBag, profile)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Can't create validator.", err.Error())
 			os.Exit(EXIT_RUNTIME_ERR)

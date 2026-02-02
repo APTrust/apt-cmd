@@ -5,13 +5,13 @@ import (
 	"testing"
 
 	"github.com/APTrust/apt-cmd/cmd"
-	"github.com/APTrust/dart-runner/bagit"
+	"github.com/APTrust/dart-runner/core"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestEnsureDefaultTags(t *testing.T) {
-	tags := make([]*bagit.TagDefinition, 0)
+	tags := make([]*core.TagDefinition, 0)
 	tags = cmd.EnsureDefaultTags(tags)
 	version := cmd.FindTag(tags, "bagit.txt", "BagIt-Version")
 	encoding := cmd.FindTag(tags, "bagit.txt", "Tag-File-Character-Encoding")
@@ -57,7 +57,7 @@ func TestValidateTags(t *testing.T) {
 		"Required tag aptrust-info.txt/Storage-Option is missing.",
 	}
 
-	tags := make([]*bagit.TagDefinition, 0)
+	tags := make([]*core.TagDefinition, 0)
 	errors := cmd.ValidateTags(profile, tags)
 	assert.Equal(t, len(expected), len(errors))
 	assert.Equal(t, expected, errors)
@@ -72,10 +72,10 @@ func TestValidateTags(t *testing.T) {
 	assert.Equal(t, len(expected), len(errors))
 	assert.Equal(t, expected, errors)
 
-	tags = append(tags, &bagit.TagDefinition{TagFile: "bag-info.txt", TagName: "Source-Organization", UserValue: "APTrust"})
-	tags = append(tags, &bagit.TagDefinition{TagFile: "aptrust-info.txt", TagName: "Title", UserValue: "Bag Title"})
-	tags = append(tags, &bagit.TagDefinition{TagFile: "aptrust-info.txt", TagName: "Access", UserValue: "Consortia"})
-	tags = append(tags, &bagit.TagDefinition{TagFile: "aptrust-info.txt", TagName: "Storage-Option", UserValue: "Standard"})
+	tags = append(tags, &core.TagDefinition{TagFile: "bag-info.txt", TagName: "Source-Organization", UserValue: "APTrust"})
+	tags = append(tags, &core.TagDefinition{TagFile: "aptrust-info.txt", TagName: "Title", UserValue: "Bag Title"})
+	tags = append(tags, &core.TagDefinition{TagFile: "aptrust-info.txt", TagName: "Access", UserValue: "Consortia"})
+	tags = append(tags, &core.TagDefinition{TagFile: "aptrust-info.txt", TagName: "Storage-Option", UserValue: "Standard"})
 
 	tags = cmd.EnsureDefaultTags(tags)
 	errors = cmd.ValidateTags(profile, tags)
@@ -97,10 +97,10 @@ func TestValidateTags(t *testing.T) {
 }
 
 func TestFindTag(t *testing.T) {
-	tags := make([]*bagit.TagDefinition, 0)
+	tags := make([]*core.TagDefinition, 0)
 	version := cmd.FindTag(tags, "bagit.txt", "BagIt-Version")
 	assert.Nil(t, version)
-	tags = append(tags, &bagit.TagDefinition{TagFile: "bagit.txt", TagName: "BagIt-Version"})
+	tags = append(tags, &core.TagDefinition{TagFile: "bagit.txt", TagName: "BagIt-Version"})
 	version = cmd.FindTag(tags, "bagit.txt", "BagIt-Version")
 	assert.NotNil(t, version)
 	assert.Equal(t, "BagIt-Version", version.TagName)

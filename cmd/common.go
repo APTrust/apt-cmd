@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/APTrust/dart-runner/bagit"
+	"github.com/APTrust/dart-runner/core"
 	"github.com/APTrust/preservation-services/network"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -101,21 +101,21 @@ func GetUrlValues(args []string) url.Values {
 // use title-cased tag names. Some parses may expect or demand
 // title-cased names when validating bags, so we will stick to title
 // case for now.
-func GetTagValues(args []string) []*bagit.TagDefinition {
+func GetTagValues(args []string) []*core.TagDefinition {
 	pairs := ParseArgPairs(args)
 	titleCase := cases.Title(language.English)
-	tagDefs := make([]*bagit.TagDefinition, 0)
+	tagDefs := make([]*core.TagDefinition, 0)
 	for _, pair := range pairs {
-		var tagDef *bagit.TagDefinition
+		var tagDef *core.TagDefinition
 		parts := strings.SplitN(pair.Name, "/", 2)
 		if len(parts) == 1 {
-			tagDef = &bagit.TagDefinition{
+			tagDef = &core.TagDefinition{
 				TagFile:   "bag-info.txt",
 				TagName:   titleCase.String(strings.ToLower(pair.Name)),
 				UserValue: pair.Value,
 			}
 		} else {
-			tagDef = &bagit.TagDefinition{
+			tagDef = &core.TagDefinition{
 				TagFile:   parts[0],
 				TagName:   titleCase.String(strings.ToLower(parts[1])),
 				UserValue: pair.Value,
@@ -247,8 +247,8 @@ func GetFlagValue(flags *pflag.FlagSet, flagName, errMsg string) string {
 }
 
 // LoadProfile loads a BagIt profile.
-func LoadProfile(name string) (*bagit.Profile, error) {
-	profile := &bagit.Profile{}
+func LoadProfile(name string) (*core.BagItProfile, error) {
+	profile := &core.BagItProfile{}
 	var data []byte
 	var err error
 	switch name {
