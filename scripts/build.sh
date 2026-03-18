@@ -3,7 +3,7 @@
 OS=`uname`
 CURRENT_ARCHITECTURE=`uname -m`
 APPNAME="apt-cmd"
-TEST_CMD="./scripts/test.rb units"
+TEST_CMD="./scripts/test.sh units"
 VERSION=`git describe --tags`
 COMMIT_ID=`git rev-parse --short HEAD`
 DATE=`date +"%Y-%m-%d"`

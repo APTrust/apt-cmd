@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// Note: To run integration tests, run `scripts/test.rb integration`.
+// Note: To run integration tests, run `scripts/test.sh integration`.
 // That starts up a local instance of registry and loads the same
 // test fixtures that we use in registry and preservation-services
 // tests.

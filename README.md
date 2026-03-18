@@ -38,9 +38,9 @@ You'll find extensive documentation and usage examples at https://aptrust.github
 
 # Testing
 
-Unit tests: `./scripts/test.rb units`
+Unit tests: `./scripts/test.sh units`
 
-Integration tests: `./scripts/test.rb integration`
+Integration tests: `./scripts/test.sh integration`
 
 Note that when running integration tests, Registry tests do not run on Windows.
 
