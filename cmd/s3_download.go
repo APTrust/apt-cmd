@@ -79,11 +79,10 @@ Full online documentation:
 		var readCloser io.ReadCloser
 		if info.Size > constants.MaxS3RequestSize {
 			logger.Debugf("Using GetLargeObject to get %s from %s/%s", key, s3Host, bucket)
-			readCloser, err = GetLargeObject(client, bucket, key, info.Size)
 		} else {
 			logger.Debugf("Using GetObject to get %s from %s/%s", key, s3Host, bucket)
-			readCloser, err = client.GetObject(context.Background(), bucket, key, minio.GetObjectOptions{})
 		}
+		readCloser, err = DownloadObject(client, bucket, key, info.Size)
 
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "Error retrieving S3 object:", err)
@@ -104,6 +103,17 @@ Full online documentation:
 		fmt.Println("")
 		os.Exit(EXIT_OK)
 	},
+}
+
+// DownloadObject returns a ReadCloser for the named S3 object.
+// Objects larger than constants.MaxS3RequestSize (5 TB) are retrieved
+// via ranged GET requests (GetLargeObject); all others use a standard
+// GetObject call.
+func DownloadObject(client *minio.Client, bucket, key string, size int64) (io.ReadCloser, error) {
+	if size > constants.MaxS3RequestSize {
+		return GetLargeObject(client, bucket, key, size)
+	}
+	return client.GetObject(context.Background(), bucket, key, minio.GetObjectOptions{})
 }
 
 // ComputeChunkSize computes the chunk size for retrieving a large

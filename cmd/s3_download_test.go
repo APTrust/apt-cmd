@@ -8,9 +8,11 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"testing"
 
 	"github.com/APTrust/apt-cmd/cmd"
+	"github.com/APTrust/dart-runner/constants"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/stretchr/testify/assert"
@@ -166,4 +168,91 @@ func TestGetLargeObject_ServerError(t *testing.T) {
 	defer rc.Close()
 	_, readErr := io.ReadAll(rc)
 	assert.Error(t, readErr)
+}
+
+// TestDownloadObject_SmallFile verifies that DownloadObject uses a plain
+// GetObject (no Range header) when the object is at or below MaxS3RequestSize.
+func TestDownloadObject_SmallFile(t *testing.T) {
+	var rangeUsed atomic.Bool
+	data := []byte("small file content")
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.RawQuery, "location") {
+			w.Header().Set("Content-Type", "application/xml")
+			fmt.Fprint(w, "<?xml version=\"1.0\"?><LocationConstraint></LocationConstraint>")
+			return
+		}
+		if r.Header.Get("Range") != "" {
+			rangeUsed.Store(true)
+		}
+		if r.Method == http.MethodGet {
+			w.Header().Set("Content-Length", strconv.Itoa(len(data)))
+			w.Header().Set("Content-Type", "application/octet-stream")
+			w.Header().Set("ETag", "\"test-etag\"")
+			w.Header().Set("Last-Modified", "Mon, 15 Jan 2024 00:00:00 GMT")
+			w.WriteHeader(http.StatusOK)
+			w.Write(data) //nolint:errcheck
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer server.Close()
+
+	client := newTestMinioClient(t, server.URL)
+	// Any size ≤ MaxS3RequestSize must use GetObject (no Range header).
+	rc, err := cmd.DownloadObject(client, "test-bucket", "test-key", constants.MaxS3RequestSize)
+	require.NoError(t, err)
+	require.NotNil(t, rc)
+	defer rc.Close()
+
+	got, err := io.ReadAll(rc)
+	require.NoError(t, err)
+	assert.Equal(t, data, got)
+	assert.False(t, rangeUsed.Load(), "GetObject should not send a Range header")
+}
+
+// TestDownloadObject_LargeFile verifies that DownloadObject switches to
+// GetLargeObject (ranged GETs) when the object exceeds MaxS3RequestSize.
+func TestDownloadObject_LargeFile(t *testing.T) {
+	var rangeUsed atomic.Bool
+	largeSize := constants.MaxS3RequestSize + 1
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.RawQuery, "location") {
+			w.Header().Set("Content-Type", "application/xml")
+			fmt.Fprint(w, "<?xml version=\"1.0\"?><LocationConstraint></LocationConstraint>")
+			return
+		}
+		if r.Header.Get("Range") != "" {
+			rangeUsed.Store(true)
+		}
+		if r.Method == http.MethodGet {
+			// Return a minimal partial-content response so the goroutine has
+			// something to write before we close the reader.
+			w.Header().Set("Content-Range", fmt.Sprintf("bytes 0-0/%d", largeSize))
+			w.Header().Set("Content-Length", "1")
+			w.Header().Set("Content-Type", "application/octet-stream")
+			w.Header().Set("ETag", "\"test-etag\"")
+			w.Header().Set("Last-Modified", "Mon, 15 Jan 2024 00:00:00 GMT")
+			w.WriteHeader(http.StatusPartialContent)
+			w.Write([]byte{0x00}) //nolint:errcheck
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer server.Close()
+
+	client := newTestMinioClient(t, server.URL)
+	// Any size > MaxS3RequestSize must use GetLargeObject (Range headers).
+	rc, err := cmd.DownloadObject(client, "test-bucket", "test-key", largeSize)
+	require.NoError(t, err)
+	require.NotNil(t, rc)
+
+	// Read one byte to ensure the first ranged GET has been issued, then
+	// close the reader so the background goroutine exits cleanly.
+	buf := make([]byte, 1)
+	rc.Read(buf) //nolint:errcheck
+	rc.Close()
+
+	assert.True(t, rangeUsed.Load(), "GetLargeObject should send a Range header")
 }
