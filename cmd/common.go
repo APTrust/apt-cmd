@@ -139,6 +139,7 @@ func NewRegistryClient(config *Config) (*network.RegistryClient, error) {
 		config.RegistryAPIVersion,
 		config.RegistryEmail,
 		config.RegistryAPIKey,
+		config.RegistryAPIVersion,
 		logger,
 	)
 	if client != nil {
