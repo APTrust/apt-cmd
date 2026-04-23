@@ -2,7 +2,7 @@
 
 For the user guide, see https://aptrust.github.io/userguide/partner_tools/.
 
-## [3.0.4] Not Yet Released
+## [3.0.4] 2026-04-23
 
 * Users can now download S3 objects of up to 50TB.
 * Converted test script from Ruby to bash to reduce number of dev/test/build dependencies.
