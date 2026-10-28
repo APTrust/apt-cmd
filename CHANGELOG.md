@@ -2,6 +2,11 @@
 
 For the user guide, see https://aptrust.github.io/userguide/partner_tools/.
 
+## [3.0.5] 2026-10-28
+
+* Upgraded to go 1.26.10
+* Updated dart runner dependency to v1.0.6
+
 ## [3.0.4] 2026-04-23
 
 * Users can now download S3 objects of up to 50TB.
